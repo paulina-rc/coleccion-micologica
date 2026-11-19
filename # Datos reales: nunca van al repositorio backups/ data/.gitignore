@@ -1,0 +1,13 @@
+# Datos reales: nunca van al repositorio
+backups/
+data/
+*.xlsx
+*.xls
+*.csv
+*.dump
+*.backup
+
+# Credenciales y archivos del sistema
+.env
+.DS_Store
+Thumbs.db
