@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cambiar contraseña · Colección Micológica</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="is-loading">
+  <div class="auth">
+    <section class="auth__cover">
+      <span class="eyebrow">UNED · ECEN · CITTED</span>
+      <div>
+        <span class="eyebrow eyebrow--yellow">Región Huetar Norte</span>
+        <h1 class="auth__title">Colección<br><i>Micológica</i></h1>
+      </div>
+      <span class="auth__subtitle">Sistema de registro de macrohongos</span>
+    </section>
+
+    <main class="auth__panel">
+      <form id="password-form" class="auth__form" novalidate>
+        <div class="auth__logos">
+          <img src="/src/img/uned.png" alt="UNED" class="logo-uned">
+          <img src="/src/img/ecen.png" alt="Escuela de Ciencias Exactas y Naturales">
+          <img src="/src/img/citted.png" alt="CITTED">
+        </div>
+
+        <h2 class="auth__heading">Nueva contraseña</h2>
+        <!-- El texto cambia si es el primer ingreso o un cambio voluntario -->
+        <p id="intro" class="auth__text"></p>
+
+        <p id="form-message" class="alert" role="alert" hidden></p>
+
+        <!-- Campo oculto con el correo: ayuda al gestor de contraseñas
+             del navegador a guardar la nueva con la cuenta correcta. -->
+        <input type="email" name="email" autocomplete="username" class="visually-hidden" tabindex="-1" aria-hidden="true">
+
+        <label class="field">Contraseña nueva
+          <input type="password" name="password" autocomplete="new-password" required>
+          <span class="field__hint" id="password-hint"></span>
+        </label>
+        <label class="field">Repetir contraseña nueva
+          <input type="password" name="confirm" autocomplete="new-password" required>
+        </label>
+
+        <button type="submit" class="btn btn--block">Guardar contraseña</button>
+
+        <p class="auth__note"><a href="#" id="secondary-link"></a></p>
+      </form>
+    </main>
+  </div>
+
+  <script type="module" src="/src/pages/cambiar-contrasena.js"></script>
+</body>
+</html>
