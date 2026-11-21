@@ -9,7 +9,12 @@ export const PAGES = {
   login: 'app/ingresar.html',
   changePassword: 'app/cambiar-contrasena.html',
   home: 'app/recolectas.html',
+  specimenEdit: 'app/recolecta-editar.html',
 };
+
+// Formato del código de recolecta. Es el mismo que revisa la base
+// (check de specimens.code); si el formato cambia, se cambia en los dos.
+export const SPECIMEN_CODE = /^CITTED-[0-9]{4}$/;
 
 export function url(page, params) {
   const query = params ? `?${new URLSearchParams(params)}` : '';

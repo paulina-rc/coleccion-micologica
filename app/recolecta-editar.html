@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Nueva recolecta · Colección Micológica</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="is-loading has-actionbar">
+  <main class="page page--narrow">
+    <div class="page__head">
+      <h1 class="page__title" id="page-title">Nueva <i>recolecta</i></h1>
+      <!-- El código lo asigna la base al guardar (04_specimen_code.sql) -->
+      <span class="code-tag code-tag--pending" id="code-tag">Código al guardar</span>
+    </div>
+
+    <!-- Índice: cada número salta a su sección. No obliga a llenar en orden:
+         en campo se llena el encabezado y el laboratorio se completa días después. -->
+    <nav aria-label="Secciones del formulario">
+      <ol class="steps">
+        <li><a class="steps__link" href="#encabezado"><span class="steps__num">1</span>Encabezado</a></li>
+        <li><a class="steps__link" href="#campo"><span class="steps__num">2</span>Campo</a></li>
+        <li><a class="steps__link" href="#laboratorio"><span class="steps__num">3</span>Laboratorio</a></li>
+        <li><a class="steps__link" href="#taxonomia"><span class="steps__num">4</span>Taxonomía</a></li>
+        <li><a class="steps__link" href="#coleccion"><span class="steps__num">5</span>Colección</a></li>
+      </ol>
+    </nav>
+
+    <form id="specimen-form" class="form-stack" novalidate>
+      <p id="form-message" class="alert" role="alert" hidden></p>
+
+      <section class="card" id="encabezado" aria-labelledby="encabezado-title">
+        <h2 class="card__title" id="encabezado-title">Encabezado</h2>
+      </section>
+
+      <section class="card" id="campo" aria-labelledby="campo-title">
+        <h2 class="card__title" id="campo-title">Registro de campo</h2>
+      </section>
+
+      <section class="card" id="laboratorio" aria-labelledby="laboratorio-title">
+        <h2 class="card__title" id="laboratorio-title">Observación en laboratorio</h2>
+      </section>
+
+      <div class="card-row">
+        <section class="card card--label" id="taxonomia" aria-labelledby="taxonomia-title">
+          <h2 class="card__title" id="taxonomia-title">Determinavit · Taxonomía</h2>
+        </section>
+
+        <section class="card" id="coleccion" aria-labelledby="coleccion-title">
+          <h2 class="card__title" id="coleccion-title">Colección</h2>
+        </section>
+      </div>
+    </form>
+  </main>
+
+  <!-- Fuera del <main> para que ocupe todo el ancho; form="specimen-form"
+       une el botón al formulario aunque esté fuera de él. -->
+  <div class="actionbar">
+    <div class="actionbar__inner">
+      <a class="actionbar__cancel" id="cancel-link" href="recolectas.html">Cancelar</a>
+      <button type="submit" form="specimen-form" class="btn btn--yellow" id="save-button">Guardar</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/pages/recolecta-editar.js"></script>
+</body>
+</html>
