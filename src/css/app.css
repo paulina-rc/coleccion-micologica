@@ -90,7 +90,9 @@ a:hover { color: var(--navy); }
   display: flex; flex-direction: column; gap: 6px;
   font-size: 13px; font-weight: 600;
 }
-.field input {
+.field input,
+.field select,
+.field textarea {
   height: 48px;
   border: 1px solid var(--input-border);
   border-radius: var(--radius);
@@ -100,7 +102,10 @@ a:hover { color: var(--navy); }
   color: var(--navy);
   background: var(--white);
 }
-.field input:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--blue-soft); }
+.field textarea { height: auto; min-height: 110px; padding: 12px 14px; line-height: 1.5; resize: vertical; }
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--blue-soft); }
 .field__hint { font-weight: 400; color: var(--text-muted); }
 
 .alert {
@@ -258,4 +263,194 @@ a:hover { color: var(--navy); }
 @media (max-width: 600px) {
   .page { padding: 24px 16px 40px; }
   .page__title { font-size: 36px; }
+}
+
+
+/* ---------- 7. Formulario de recolecta (app/recolecta-editar.html) ---------- */
+/* Más angosto que el resto: una línea de 1200 px con tres campos
+   es difícil de leer y llenar. */
+.page--narrow { max-width: 1000px; }
+
+.page__head {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: 14px; margin-bottom: 24px;
+}
+.page__head .page__title { margin: 0; }
+
+/* Código de la recolecta como una cinta amarilla pegada (detalle del diseño) */
+.code-tag {
+  padding: 8px 14px;
+  background: var(--yellow);
+  color: var(--navy);
+  font: 600 15px var(--font-code);
+  letter-spacing: .04em;
+  transform: rotate(-1.5deg);
+  box-shadow: 2px 2px 0 rgba(2, 17, 53, .15);
+}
+.code-tag--pending { background: var(--white); border: 1px dashed var(--brown); font-weight: 500; color: var(--brown); }
+
+/* Índice de secciones: enlaces a cada tarjeta, con línea punteada café */
+.steps {
+  /* El padding deja espacio al anillo amarillo: overflow-x lo recortaría */
+  list-style: none; margin: 0 0 20px; padding: 8px 8px 8px;
+  display: flex; justify-content: space-between; gap: 8px;
+  position: relative; overflow-x: auto;
+}
+.steps::before {
+  content: ''; position: absolute; left: 44px; right: 44px; top: 25px;
+  border-top: 2px dashed #C4AE93;
+}
+.steps__link {
+  position: relative; min-width: 76px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--text-muted); text-decoration: none;
+}
+.steps__num {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--white); border: 2px solid #C4AE93; color: var(--navy);
+}
+.steps__link:hover { color: var(--blue); }
+.steps__link.is-current { color: var(--navy); font-weight: 700; }
+.steps__link.is-current .steps__num {
+  background: var(--yellow); border-color: var(--yellow);
+  box-shadow: 0 0 0 5px var(--cream), 0 0 0 7px var(--yellow);
+}
+
+.form-stack { display: flex; flex-direction: column; gap: 20px; }
+
+.card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 22px 24px;
+  /* El encabezado fijo y la barra inferior no tapan el título al saltar con el índice */
+  scroll-margin-top: 16px;
+  scroll-margin-bottom: 96px;
+}
+.card__title { margin: 0 0 16px; font: 700 25px var(--font-title); color: var(--blue); }
+.card__text { margin: -8px 0 16px; font-size: 13px; color: var(--text-muted); }
+
+/* Dos tarjetas lado a lado (taxonomía + colección); bajan solas en pantallas angostas */
+.card-row { display: flex; flex-wrap: wrap; gap: 20px; }
+.card-row > * { flex: 1 1 340px; }
+
+.grid { display: grid; gap: 16px; }
+.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid__wide { grid-column: 1 / -1; }
+
+/* Coordenadas y altitud en un recuadro verde: datos de ubicación sensibles */
+.coords {
+  margin-top: 18px; padding: 16px;
+  border-radius: 16px;
+  background: var(--green-soft);
+}
+
+/* Números y códigos en letra monoespaciada: se distinguen 0 y O, 1 y l */
+.field--mono input { font-family: var(--font-code); }
+
+/* Campo con error */
+.field.is-invalid input,
+.field.is-invalid select,
+.field.is-invalid textarea { border: 2px solid var(--error); }
+.field__error { font-size: 12px; font-weight: 600; color: var(--error); }
+.field__error:empty { display: none; }
+
+/* Taxonomía: tarjeta de papel tipo etiqueta "Determinavit" del herbario */
+.card--label {
+  background: #FFFDF5;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 #E2DCC8;
+  font-family: var(--font-code);
+}
+.card--label .card__title {
+  padding-bottom: 8px; margin-bottom: 14px;
+  border-bottom: 1px solid var(--navy);
+  font: 600 12px var(--font-code); letter-spacing: .16em; text-transform: uppercase; color: var(--navy);
+}
+.card--label .field { font: 500 12px var(--font-code); color: var(--text-muted); }
+.card--label .field input,
+.card--label .field select {
+  height: 42px; padding: 0 4px;
+  border: 0; border-bottom: 1px solid var(--navy); border-radius: 0;
+  background: transparent;
+  font-family: var(--font-code);
+}
+.card--label .field input:focus,
+.card--label .field select:focus { box-shadow: none; border-bottom: 2px solid var(--blue); }
+.card--label .field--science input { font-family: var(--font-science); font-style: italic; }
+
+/* Opciones en píldora (estado de identificación). Son radios reales:
+   funcionan con teclado y se leen bien con lector de pantalla. */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; border: 0; }
+.pills legend { margin-bottom: 8px; font: 500 12px var(--font-code); color: var(--text-muted); }
+.pill { position: relative; }
+.pill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pill span {
+  height: 34px; padding: 0 12px;
+  display: flex; align-items: center;
+  border: 1px solid var(--input-border); border-radius: var(--pill);
+  background: var(--white);
+  font: 500 12px var(--font-code); color: var(--navy);
+  cursor: pointer;
+}
+.pill input:checked + span { border-color: #8A5A00; background: #FEF3D9; color: #7A4E00; font-weight: 600; }
+.pill input:focus-visible + span { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* Página con barra inferior: la barra queda abajo aunque el formulario
+   sea corto (body en columna y el contenido ocupa el espacio que sobra). */
+body.has-actionbar { display: flex; flex-direction: column; }
+body.has-actionbar > .page { flex: 1; width: 100%; }
+
+/* Barra inferior fija: publicación, cancelar y guardar siempre a mano */
+.actionbar {
+  position: sticky; bottom: 0; z-index: 3;
+  margin-top: 32px;
+  background: var(--blue) url('../img/topo-claro.svg') center / cover no-repeat;
+  color: var(--white);
+}
+.actionbar__inner {
+  max-width: 1000px; margin: 0 auto; padding: 14px 24px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+}
+.actionbar__cancel {
+  margin-left: auto;  /* Cancelar y Guardar a la derecha, con o sin interruptor */
+  min-height: 44px; padding: 0 10px;
+  display: flex; align-items: center;
+  font-size: 14px; font-weight: 600; color: var(--white);
+}
+.actionbar__cancel:hover { color: var(--yellow); }
+.btn--yellow { border-radius: var(--pill); background: var(--yellow); color: var(--navy); }
+.btn--yellow:hover { background: var(--white); color: var(--navy); }
+
+/* Interruptor En investigación / Publicada */
+.switch {
+  margin-right: auto;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch__track {
+  position: relative; width: 52px; height: 30px; flex: none;
+  border-radius: var(--pill); background: rgba(255, 255, 255, .2);
+}
+.switch__track::after {
+  content: ''; position: absolute; left: 3px; top: 3px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--yellow);
+  transition: transform .15s;
+}
+.switch input:checked + .switch__track { background: var(--green); }
+.switch input:checked + .switch__track::after { transform: translateX(22px); background: var(--white); }
+.switch input:focus-visible + .switch__track { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+@media (max-width: 700px) {
+  .grid--2, .grid--3 { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: 18px 16px; }
+  .steps { justify-content: flex-start; }
+  .actionbar__inner { padding: 12px 16px; }
+  .switch { width: 100%; }
+  .actionbar__cancel { margin-left: 0; }
+  .actionbar .btn { flex: 1; }
 }
