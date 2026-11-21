@@ -1,0 +1,27 @@
+name: Mantener activa la base de datos
+
+# Supabase (plan gratuito) pausa el proyecto tras 7 días sin actividad.
+# Esta tarea llama una vez al día a la función pública ping().
+on:
+  schedule:
+    - cron: '17 9 * * *'   # 3:17 a. m. hora de Costa Rica
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar a ping()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        # --fail hace que la tarea quede en rojo si Supabase no responde 200.
+        run: |
+          curl --fail --silent --show-error -X POST \
+            "$SUPABASE_URL/rest/v1/rpc/ping" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}'
