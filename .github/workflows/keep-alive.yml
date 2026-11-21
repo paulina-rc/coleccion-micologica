@@ -18,10 +18,14 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        # --fail hace que la tarea quede en rojo si Supabase no responde 200.
+        # Se limpia la URL por si el secreto quedó con "/" o "/rest/v1" al final.
+        # --fail-with-body deja la tarea en rojo si Supabase no responde 200
+        # y muestra el mensaje de error de Supabase en el registro.
         run: |
-          curl --fail --silent --show-error -X POST \
-            "$SUPABASE_URL/rest/v1/rpc/ping" \
+          URL="${SUPABASE_URL%/}"
+          URL="${URL%/rest/v1}"
+          curl --fail-with-body --silent --show-error -X POST \
+            "$URL/rest/v1/rpc/ping" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Content-Type: application/json" \
             -d '{}'
