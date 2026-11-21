@@ -1,0 +1,13 @@
+/* Fuentes del sistema, instaladas con npm (sin Google Fonts ni CDN).
+   Solo el subconjunto "latin" (incluye tildes y ñ) y solo los grosores
+   que usa el diseño. Para agregar uno: @import '@fontsource/<fuente>/latin-<grosor>.css';
+   Jost reemplaza a Futura (oficial de la UNED, pero con licencia comercial).
+   Merriweather (nombres científicos) se agrega en el paso 4. */
+@import '@fontsource/jost/latin-600.css';
+@import '@fontsource/jost/latin-700.css';
+@import '@fontsource/jost/latin-700-italic.css';
+@import '@fontsource/open-sans/latin-400.css';
+@import '@fontsource/open-sans/latin-600.css';
+@import '@fontsource/open-sans/latin-700.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-mono/latin-600.css';
