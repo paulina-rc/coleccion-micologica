@@ -9,5 +9,5 @@
 // Son los mismos valores de los secretos SUPABASE_URL y SUPABASE_ANON_KEY
 // de GitHub. La URL va sin "/" ni "/rest/v1" al final.
 
-export const SUPABASE_URL = 'https://TU-ID-DE-PROYECTO.supabase.co';
-export const SUPABASE_ANON_KEY = 'PEGAR-AQUI-LA-CLAVE-ANONIMA';
+export const SUPABASE_URL = 'https://ibywoiexfnnwsedclpye.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_dfUj1Okk3rAgPvgtJszA_g_rsOoa-Cq';
