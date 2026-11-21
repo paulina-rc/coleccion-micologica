@@ -1,0 +1,20 @@
+# Dependencias y compilación (se generan con npm install / npm run build)
+node_modules/
+dist/
+
+# Datos reales: nunca al repositorio público
+backups/
+data/
+*.xlsx
+*.xls
+*.csv
+*.sql.gz
+
+# Variables de entorno
+.env
+.env.*
+
+# Sistema operativo y editor
+Thumbs.db
+desktop.ini
+.DS_Store
