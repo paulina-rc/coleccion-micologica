@@ -29,6 +29,11 @@ export default defineConfig({
   // Ruta donde vive el sitio. En GitHub Pages es /coleccion-micologica/.
   // Al migrar al hosting de la UNED se compila con BASE_PATH=/ (ver docs/05).
   base: process.env.BASE_PATH ?? '/coleccion-micologica/',
+  // Sitio de varias páginas: si una página no existe, el servidor de
+  // desarrollo responde 404. Con el valor por defecto ('spa') devolvía
+  // index.html, cuya redirección relativa (app/recolectas.html) apuntaba
+  // a app/app/recolectas.html, que tampoco existía: se recargaba sin fin.
+  appType: 'mpa',
   build: {
     outDir: 'dist',
     emptyOutDir: true,
