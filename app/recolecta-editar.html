@@ -32,7 +32,44 @@
 
       <section class="card" id="encabezado" aria-labelledby="encabezado-title">
         <h2 class="card__title" id="encabezado-title">Encabezado</h2>
-      </section>
+        
+        <!-- Cuando una etiqueta lleva aclaración, texto y aclaración van en un
+                     <span> para que queden en la misma línea (.field es una columna). -->
+        <div class="grid grid--3">
+          <!-- Las opciones las llena recolecta-editar.js desde la base -->
+          <label class="field">Gira
+            <select name="trip_id" id="trip-select">
+              <option value="">Sin gira (colecta suelta)</option>
+            </select>
+          </label>
+          <label class="field">Sitio
+            <select name="site_id" id="site-select">
+              <option value="">Elegir sitio…</option>
+            </select>
+          </label>
+          <label class="field">Fecha de colecta
+            <input type="date" name="collected_on" id="collected-on">
+          </label>
+        
+          <label class="field">Hora de inicio
+            <input type="time" name="time_start">
+          </label>
+          <label class="field">Hora de fin
+            <input type="time" name="time_end">
+          </label>
+          <label class="field field--mono"><span>Código de campo <span class="field__hint">(si tiene, ej. M12)</span></span>
+            <input type="text" name="field_code" maxlength="20" autocomplete="off">
+          </label>
+        
+          <label class="field grid__wide"><span>Localidad <span class="field__hint">(sendero o sector dentro del
+                sitio)</span></span>
+            <input type="text" name="locality" maxlength="200">
+          </label>
+          <label class="field grid__wide">Condiciones ambientales
+            <textarea name="environmental_conditions" rows="3"></textarea>
+          </label>
+        </div>
+        </section>
 
       <section class="card" id="campo" aria-labelledby="campo-title">
         <h2 class="card__title" id="campo-title">Registro de campo</h2>
