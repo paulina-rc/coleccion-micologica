@@ -9,6 +9,8 @@ import { showMessage, setFieldError } from '../messages.js';
 import { datePicker, timePicker } from '../pickers.js';
 import { createLocationMap } from '../location-map.js';
 import { parseDecimal, parseAltitude, coordinateErrors, altitudeErrors } from '../coordinates.js';
+import { listPeople } from '../api/people.js';
+import { createPeoplePicker } from '../people-picker.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -104,8 +106,35 @@ function addOption(select, value, label) {
 // Guarda la fecha de cada gira para proponerla como fecha de colecta.
 const tripDates = new Map();
 
+// ---- Créditos: selector de personas por rol ----
+// Una sola lista para los cuatro selectores (ver people-picker.js).
+// Los selectores se crean antes de cargar la lista: si la carga falla,
+// igual se pueden escribir nombres.
+const people = [];
+const peoplePickers = {};
+for (const field of document.querySelectorAll('[data-people-role]')) {
+  peoplePickers[field.dataset.peopleRole] = createPeoplePicker(field, { people });
+}
+
+// Créditos con la forma que espera save_specimen:
+// { "collector": ["S. Valerio"], "identifier": ["M. Mata"], ... }
+// Se mandan los cuatro roles aunque estén vacíos: un rol vacío borra los
+// créditos que tenía (al editar). El fotógrafo no se manda (paso 5).
+function readCredits() {
+  return Object.fromEntries(
+    Object.entries(peoplePickers).map(([role, picker]) => [role, picker.getNames()]),
+  );
+}
+
+// Un nombre escrito sin agregar se perdería al guardar.
+// Devuelve true si no hay nada pendiente (lo usará el guardado, elemento 14).
+function checkCredits() {
+  return Object.values(peoplePickers).every((picker) => !picker.hasPendingText());
+}
+
 try {
-  const [trips, sites] = await Promise.all([listTrips(), listSites()]);
+  const [trips, sites, persons] = await Promise.all([listTrips(), listSites(), listPeople()]);
+  people.push(...persons);
 
   for (const trip of trips) {
     const date = formatDate(trip.started_on);
@@ -119,7 +148,7 @@ try {
   }
 } catch (error) {
   console.error(error);
-  showMessage(message, 'No se pudieron cargar las giras y los sitios. Revise su conexión y recargue la página.');
+  showMessage(message, 'No se pudieron cargar las giras, los sitios y las personas.Revise su conexión y recargue la página.');
 }
 
 // Al elegir una gira, se propone su fecha. Si la persona ya eligió una

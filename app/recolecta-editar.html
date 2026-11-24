@@ -71,6 +71,35 @@
             <textarea name="environmental_conditions" rows="3"></textarea>
           </label>
         </div>
+                
+        <!-- Créditos, con los nombres de la ficha oficial. Las etiquetas
+                     y la lista de sugerencias las agrega src/people-picker.js.
+                     Los campos no tienen name: los nombres se leen del selector,
+                     no del texto que quede escrito en el campo. -->
+        <div class="credits">
+          <h3 class="credits__title">Créditos</h3>
+          <p class="credits__note">Puede agregar varios nombres en cada rol. El orden en que los agrega es el orden del crédito.
+          </p>
+          <div class="grid grid--2">
+            <div class="field people" data-people-role="collector">
+              <label for="people-collector">Colector</label>
+              <input type="text" id="people-collector" maxlength="120" placeholder="Escriba un nombre">
+            </div>
+            <div class="field people" data-people-role="co_investigator">
+              <label for="people-co-investigator">Asistentes</label>
+              <input type="text" id="people-co-investigator" maxlength="120" placeholder="Escriba un nombre">
+            </div>
+            <div class="field people" data-people-role="identifier">
+              <label for="people-identifier">Identifica</label>
+              <input type="text" id="people-identifier" maxlength="120" placeholder="Escriba un nombre">
+            </div>
+            <div class="field people" data-people-role="describer">
+              <label for="people-describer">Describe</label>
+              <input type="text" id="people-describer" maxlength="120" placeholder="Escriba un nombre">
+            </div>
+          </div>
+        </div>
+        
         <!-- Ubicación. Estos datos no salen en la ficha pública del QR
                      (public_specimen no los devuelve). -->
         <div class="coords">
