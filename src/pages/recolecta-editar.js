@@ -5,7 +5,8 @@ import { requireSession } from '../auth-guard.js';
 import { renderHeader } from '../layout.js';
 import { PAGES, url, go, SPECIMEN_CODE } from '../paths.js';
 import { listTrips, listSites } from '../api/catalogs.js';
-import { showMessage } from '../messages.js';
+import { showMessage, setFieldError } from '../messages.js';
+import { datePicker, timePicker } from '../pickers.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -48,7 +49,38 @@ function todayLocal() {
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   return now.toISOString().slice(0, 10);
 }
-collectedOn.max = todayLocal(); // la base también lo valida (save_specimen)
+
+// ---- Fecha y horas ----
+// La fecha futura no se bloquea en el calendario: se puede elegir, pero
+// sale el error. Un día bloqueado sin explicación confunde más.
+// La base vuelve a revisar las dos reglas al guardar (save_specimen).
+const timeStart = document.querySelector('#time-start');
+const timeEnd = document.querySelector('#time-end');
+let dateSetByHand = false; // true cuando la persona eligió la fecha ella misma
+
+const datePickerInstance = datePicker(collectedOn, {
+  onChange: (_dates, value) => {
+    dateSetByHand = Boolean(value);
+    checkCollectedOn();
+  },
+});
+const timeEndPicker = timePicker(timeEnd, { onChange: () => checkTimes() });
+timePicker(timeStart, { onChange: () => checkTimes() });
+
+// Los valores son texto "AAAA-MM-DD" y "HH:MM": compararlos como texto
+// da el mismo orden que compararlos como fechas u horas.
+function checkCollectedOn() {
+  const value = collectedOn.value;
+  setFieldError(datePickerInstance.altInput,
+    value && value > todayLocal() ? 'La fecha de colecta no puede ser posterior a hoy.' : '');
+}
+
+function checkTimes() {
+  const start = timeStart.value;
+  const end = timeEnd.value;
+  setFieldError(timeEndPicker.altInput,
+    start && end && end < start ? 'La hora de fin no puede ser anterior a la de inicio.' : '');
+}
 
 const dateFormat = new Intl.DateTimeFormat('es-CR', { day: 'numeric', month: 'short', year: 'numeric' });
 
@@ -88,11 +120,14 @@ try {
   showMessage(message, 'No se pudieron cargar las giras y los sitios. Revise su conexión y recargue la página.');
 }
 
-// Al elegir una gira, se propone su fecha si la fecha está vacía.
-// No se sobrescribe una fecha ya escrita: una gira puede durar varios días.
+// Al elegir una gira, se propone su fecha. Si la persona ya eligió una
+// fecha a mano, se respeta: una gira puede durar varios días.
 tripSelect.addEventListener('change', () => {
   const date = tripDates.get(tripSelect.value);
-  if (date && !collectedOn.value) collectedOn.value = date;
+  if (date && !dateSetByHand) {
+    datePickerInstance.setDate(date, false); // false: no cuenta como elegida a mano
+    checkCollectedOn();
+  }
 });
 
 // ---- Índice de secciones ----
@@ -125,6 +160,6 @@ markCurrent('encabezado');
 // ---- Guardar ----
 // Por ahora solo evita que el formulario recargue la página.
 // El guardado real con save_specimen llega en el elemento 14.
-document.querySelector('#specimen-form').addEventListener('submit', (event) => {
+form.addEventListener('submit', (event) => {
   event.preventDefault();
 });

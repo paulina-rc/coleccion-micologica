@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +8,7 @@
   <title>Nueva recolecta · Colección Micológica</title>
   <link rel="stylesheet" href="/src/css/app.css">
 </head>
+
 <body class="is-loading has-actionbar">
   <main class="page page--narrow">
     <div class="page__head">
@@ -32,9 +34,9 @@
 
       <section class="card" id="encabezado" aria-labelledby="encabezado-title">
         <h2 class="card__title" id="encabezado-title">Encabezado</h2>
-        
+
         <!-- Cuando una etiqueta lleva aclaración, texto y aclaración van en un
-                     <span> para que queden en la misma línea (.field es una columna). -->
+             <span> para que queden en la misma línea (.field es una columna). -->
         <div class="grid grid--3">
           <!-- Las opciones las llena recolecta-editar.js desde la base -->
           <label class="field">Gira
@@ -47,27 +49,29 @@
               <option value="">Elegir sitio…</option>
             </select>
           </label>
+          <!-- type="text": el calendario y el selector de hora los dibuja
+               src/pickers.js (flatpickr), no el navegador -->
           <label class="field">Fecha de colecta
-            <input type="date" name="collected_on" id="collected-on">
+            <input type="text" name="collected_on" id="collected-on" placeholder="Elegir fecha">
           </label>
-                  
+
           <!-- Sin "Código de campo": el código lo asigna la base (CITTED-####).
-           El código M## del Excel llega solo con la importación (paso 9). -->
+               El código M## del Excel llega solo con la importación (paso 9). -->
           <label class="field">Hora de inicio
-            <input type="time" name="time_start">
+            <input type="text" name="time_start" id="time-start" placeholder="--:--">
           </label>
           <label class="field">Hora de fin
-            <input type="time" name="time_end">
+            <input type="text" name="time_end" id="time-end" placeholder="--:--">
           </label>
-        
           <label class="field"><span>Localidad <span class="field__hint">(sendero o sector)</span></span>
             <input type="text" name="locality" maxlength="200">
           </label>
+
           <label class="field grid__wide">Condiciones ambientales
             <textarea name="environmental_conditions" rows="3"></textarea>
           </label>
         </div>
-        </section>
+      </section>
 
       <section class="card" id="campo" aria-labelledby="campo-title">
         <h2 class="card__title" id="campo-title">Registro de campo</h2>
@@ -100,4 +104,5 @@
 
   <script type="module" src="/src/pages/recolecta-editar.js"></script>
 </body>
+
 </html>
