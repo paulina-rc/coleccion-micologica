@@ -2,6 +2,7 @@
 import { readdirSync } from 'node:fs';
 import { resolve, relative } from 'node:path';
 import { defineConfig } from 'vite';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 const root = import.meta.dirname;
 
@@ -25,7 +26,9 @@ function findPages(dir) {
   return pages;
 }
 
-export default defineConfig({
+// mode es 'development' con npm run dev, 'production' con npm run build
+// y 'phone' con npm run dev:phone.
+export default defineConfig(({ mode }) => ({
   // Ruta donde vive el sitio. En GitHub Pages es /coleccion-micologica/.
   // Al migrar al hosting de la UNED se compila con BASE_PATH=/ (ver docs/05).
   base: process.env.BASE_PATH ?? '/coleccion-micologica/',
@@ -34,6 +37,10 @@ export default defineConfig({
   // index.html, cuya redirección relativa (app/recolectas.html) apuntaba
   // a app/app/recolectas.html, que tampoco existía: se recargaba sin fin.
   appType: 'mpa',
+  // Solo con "npm run dev:phone": servidor local con HTTPS para probar en
+  // el celular. El GPS del navegador exige HTTPS (o localhost); el
+  // certificado es de prueba, por eso el celular muestra una advertencia.
+  plugins: mode === 'phone' ? [basicSsl()] : [],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
@@ -41,4 +48,4 @@ export default defineConfig({
       input: findPages(root),
     },
   },
-});
+}));
