@@ -1,0 +1,136 @@
+/* Calendario y selector de hora (flatpickr) con la identidad UNED.
+   Solo cambia colores, letras y bordes; el tamaño y la estructura
+   son los de flatpickr. */
+
+.flatpickr-calendar {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(2, 17, 53, .16);
+    font-family: var(--font-text);
+    color: var(--navy);
+}
+
+/* El triangulito que apunta al campo */
+.flatpickr-calendar.arrowTop::before {
+    border-bottom-color: var(--line);
+}
+
+.flatpickr-calendar.arrowTop::after {
+    border-bottom-color: var(--white);
+}
+
+.flatpickr-calendar.arrowBottom::before {
+    border-top-color: var(--line);
+}
+
+/* Mes y año */
+.flatpickr-months {
+    padding: 6px 4px 2px;
+}
+
+.flatpickr-current-month {
+    font: 600 17px var(--font-title);
+    color: var(--blue);
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+    font-weight: 600;
+    color: var(--blue);
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    padding: 12px;
+}
+
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+    fill: var(--blue);
+}
+
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+    fill: var(--yellow);
+}
+
+/* Días de la semana */
+span.flatpickr-weekday {
+    font: 600 11px var(--font-code);
+    color: var(--brown);
+    text-transform: uppercase;
+}
+
+/* Días */
+.flatpickr-day {
+    border-radius: 10px;
+    color: var(--navy);
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+    background: var(--blue-soft);
+    border-color: var(--blue-soft);
+}
+
+.flatpickr-day.today {
+    border-color: var(--yellow);
+}
+
+.flatpickr-day.today:hover {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--navy);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--white);
+    font-weight: 700;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: #A9A39A;
+}
+
+/* Hora */
+.flatpickr-time {
+    border-top: 1px solid var(--line);
+}
+
+.flatpickr-calendar.noCalendar .flatpickr-time {
+    border-top: 0;
+}
+
+.flatpickr-time input,
+.flatpickr-time .flatpickr-am-pm,
+.flatpickr-time .flatpickr-time-separator {
+    font: 600 18px var(--font-code);
+    color: var(--navy);
+}
+
+.flatpickr-time input:hover,
+.flatpickr-time input:focus,
+.flatpickr-time .flatpickr-am-pm:hover,
+.flatpickr-time .flatpickr-am-pm:focus {
+    background: var(--blue-soft);
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp::after {
+    border-bottom-color: var(--blue);
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown::after {
+    border-top-color: var(--blue);
+}
+
+/* El campo visible (altInput) se ve como los demás campos; flatpickr lo
+   marca como solo lectura, así que se le devuelve el fondo blanco. */
+.field input.flatpickr-input[readonly] {
+    background: var(--white);
+    cursor: pointer;
+}
