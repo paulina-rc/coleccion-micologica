@@ -50,19 +50,17 @@
           <label class="field">Fecha de colecta
             <input type="date" name="collected_on" id="collected-on">
           </label>
-        
+                  
+          <!-- Sin "Código de campo": el código lo asigna la base (CITTED-####).
+           El código M## del Excel llega solo con la importación (paso 9). -->
           <label class="field">Hora de inicio
             <input type="time" name="time_start">
           </label>
           <label class="field">Hora de fin
             <input type="time" name="time_end">
           </label>
-          <label class="field field--mono"><span>Código de campo <span class="field__hint">(si tiene, ej. M12)</span></span>
-            <input type="text" name="field_code" maxlength="20" autocomplete="off">
-          </label>
         
-          <label class="field grid__wide"><span>Localidad <span class="field__hint">(sendero o sector dentro del
-                sitio)</span></span>
+          <label class="field"><span>Localidad <span class="field__hint">(sendero o sector)</span></span>
             <input type="text" name="locality" maxlength="200">
           </label>
           <label class="field grid__wide">Condiciones ambientales
