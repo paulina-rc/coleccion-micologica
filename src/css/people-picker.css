@@ -1,0 +1,137 @@
+/* Selector de personas y bloque de créditos (src/people-picker.js) */
+
+/* Bloque "Créditos" dentro del encabezado del formulario */
+.credits {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.credits__title {
+    margin: 0;
+    font: 600 17px var(--font-title);
+    color: var(--blue);
+}
+
+.credits__note {
+    margin: 4px 0 14px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* Etiquetas de las personas elegidas */
+.people__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.people__chips[hidden] {
+    display: none;
+}
+
+.people__chip {
+    min-height: 44px;
+    /* área táctil mínima */
+    padding: 0 2px 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid transparent;
+    border-radius: var(--pill);
+    background: var(--blue-soft);
+    font: 600 14px var(--font-text);
+    color: var(--blue);
+}
+
+/* Persona que todavía no está en la base: borde punteado café,
+   el mismo aviso visual que "Código al guardar" */
+.people__chip--new {
+    border: 1px dashed var(--brown);
+    background: var(--white);
+    color: var(--brown);
+}
+
+.people__tag {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.people__remove {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.people__remove:hover {
+    background: var(--blue-light);
+}
+
+/* Campo y lista de sugerencias */
+.people__box {
+    position: relative;
+}
+
+.people__box input {
+    width: 100%;
+}
+
+.people__list {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: 0 8px 24px rgba(2, 17, 53, .15);
+}
+
+.people__list[hidden] {
+    display: none;
+}
+
+.people__option {
+    min-height: 44px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 8px;
+    font: 400 15px var(--font-text);
+    color: var(--navy);
+    cursor: pointer;
+}
+
+.people__option small {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.people__option:hover,
+.people__option.is-active {
+    background: var(--blue-soft);
+}
+
+.people__option--create {
+    font-weight: 600;
+    color: var(--brown);
+}
