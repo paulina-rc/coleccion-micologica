@@ -145,6 +145,62 @@
 
       <section class="card" id="campo" aria-labelledby="campo-title">
         <h2 class="card__title" id="campo-title">Registro de campo</h2>
+      
+        <!-- Campos de la tabla "Registro de campo" de la ficha oficial; algunos
+                   campos cortos se reacomodan para quedar en pares.
+                   Regla de nombres (la usa el guardado, elemento 14):
+                   - columna de specimens: el nombre tal cual (name="substrate");
+                   - columna de field_descriptions: prefijo "field." (name="field.body_shape").
+                   Así el guardado arma solo el objeto que espera save_specimen. -->
+        <div class="grid grid--2">
+          <!-- Lo que el equipo anotó en la libreta ("¿Xylaria?"). Se guarda
+                     tal cual y no se mezcla con la taxonomía final (sección 4). -->
+          <label class="field grid__wide"><span>Identificación aproximada <span class="field__hint">(tal como se anotó en
+                campo)</span></span>
+            <input type="text" name="identification_text" maxlength="200">
+          </label>
+          <label class="field">Tipo de sustrato
+            <input type="text" name="substrate" maxlength="200">
+          </label>
+          <label class="field">Ubicación en el bosque o sitio
+            <input type="text" name="field.forest_location" maxlength="200">
+          </label>
+      
+          <label class="field grid__wide">Forma general del cuerpo fructífero
+            <textarea name="field.body_shape" rows="3"></textarea>
+          </label>
+      
+          <label class="field">Color en fresco
+            <input type="text" name="field.color_fresh" maxlength="200">
+          </label>
+          <label class="field">Color manipulado
+            <input type="text" name="field.color_handled" maxlength="200">
+          </label>
+          <label class="field">Olor en fresco
+            <input type="text" name="field.odor_fresh" maxlength="200">
+          </label>
+          <label class="field">Olor colectado
+            <input type="text" name="field.odor_collected" maxlength="200">
+          </label>
+      
+          <!-- Texto y no número: en la ficha se escribe "+100" o "varios". -->
+          <label class="field"><span>Cantidad de cuerpos fructíferos <span class="field__hint">(ej. +100)</span></span>
+            <input type="text" name="field.fruiting_body_count" maxlength="50">
+          </label>
+          <label class="field">Hábito de crecimiento
+            <input type="text" name="field.growth_habit" maxlength="200">
+          </label>
+          <label class="field"><span>Mapa espórico <span class="field__hint">(color de la esporada)</span></span>
+            <input type="text" name="field.spore_print" maxlength="200">
+          </label>
+          <label class="field">Humedad
+            <input type="text" name="field.humidity" maxlength="200">
+          </label>
+      
+          <label class="field grid__wide">Usos
+            <textarea name="uses" rows="3"></textarea>
+          </label>
+        </div>
       </section>
 
       <section class="card" id="laboratorio" aria-labelledby="laboratorio-title">
