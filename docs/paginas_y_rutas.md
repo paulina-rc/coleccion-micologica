@@ -1,8 +1,6 @@
 # Páginas y rutas del sistema
  
-Lista de todas las páginas, su dirección y para qué sirve cada una.
-Se actualiza cada vez que se agrega o cambia una página.
- 
+Lista de todas las páginas, su dirección y funcionalidad de cada una 
 ## Direcciones base
  
 | Entorno | Dirección base | Cuándo se usa |
