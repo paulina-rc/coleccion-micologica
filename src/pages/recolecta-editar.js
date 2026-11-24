@@ -7,6 +7,8 @@ import { PAGES, url, go, SPECIMEN_CODE } from '../paths.js';
 import { listTrips, listSites } from '../api/catalogs.js';
 import { showMessage, setFieldError } from '../messages.js';
 import { datePicker, timePicker } from '../pickers.js';
+import { createLocationMap } from '../location-map.js';
+import { parseDecimal, parseAltitude, coordinateErrors, altitudeErrors } from '../coordinates.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -128,6 +130,95 @@ tripSelect.addEventListener('change', () => {
     datePickerInstance.setDate(date, false); // false: no cuenta como elegida a mano
     checkCollectedOn();
   }
+});
+
+// ---- Ubicación: coordenadas, mapa, GPS y altitud ----
+const latInput = document.querySelector('#latitude');
+const lngInput = document.querySelector('#longitude');
+const precisionSelect = document.querySelector('#coordinate-precision');
+const gpsButton = document.querySelector('#gps-button');
+const gpsStatus = document.querySelector('#gps-status');
+const altMinInput = document.querySelector('#altitude-min');
+const altMaxInput = document.querySelector('#altitude-max');
+
+// 6 decimales ≈ 10 cm: más que suficiente y no llena el campo de cifras.
+function writeCoordinates(lat, lng) {
+  latInput.value = lat.toFixed(6);
+  lngInput.value = lng.toFixed(6);
+  checkCoordinates();
+}
+
+const locationMap = createLocationMap(document.querySelector('#location-map'), {
+  onPick: (lat, lng) => {
+    writeCoordinates(lat, lng);
+    gpsStatus.textContent = '';
+  },
+});
+
+// Revisa las dos coordenadas y, si están bien, mueve el marcador.
+// Devuelve true si no hay errores (lo usará el guardado, elemento 14).
+function checkCoordinates() {
+  const lat = parseDecimal(latInput.value);
+  const lng = parseDecimal(lngInput.value);
+  const errors = coordinateErrors(lat, lng);
+  setFieldError(latInput, errors.latitude);
+  setFieldError(lngInput, errors.longitude);
+
+  const valid = !errors.latitude && !errors.longitude;
+  if (valid && lat !== null) locationMap.setPoint(lat, lng);
+  if (lat === null && lng === null) locationMap.clear();
+  return valid;
+}
+
+function checkAltitude() {
+  const errors = altitudeErrors(parseAltitude(altMinInput.value), parseAltitude(altMaxInput.value));
+  setFieldError(altMinInput, errors.altitude_min);
+  setFieldError(altMaxInput, errors.altitude_max);
+  return !errors.altitude_min && !errors.altitude_max;
+}
+
+// "change" y no "input": revisa al salir del campo, no a cada tecla
+// (escribir "-8" todavía no es un error).
+latInput.addEventListener('change', checkCoordinates);
+lngInput.addEventListener('change', checkCoordinates);
+altMinInput.addEventListener('change', checkAltitude);
+altMaxInput.addEventListener('change', checkAltitude);
+
+// GPS del celular. El navegador pide permiso la primera vez; solo funciona
+// con HTTPS o en localhost (GitHub Pages ya es HTTPS).
+const GPS_ERRORS = {
+  1: 'No se dio permiso para usar la ubicación. Actívelo en el navegador o marque el punto en el mapa.',
+  2: 'No se pudo obtener la ubicación. Marque el punto en el mapa.',
+  3: 'El GPS tardó demasiado. Intente de nuevo al aire libre o marque el punto en el mapa.',
+};
+
+if (!('geolocation' in navigator)) {
+  gpsButton.hidden = true;
+}
+
+gpsButton.addEventListener('click', () => {
+  gpsButton.disabled = true;
+  gpsStatus.textContent = 'Buscando ubicación…';
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude, accuracy } = position.coords;
+      writeCoordinates(latitude, longitude);
+      precisionSelect.value = 'point';
+      // El margen ayuda a decidir si confiar en el punto: bajo árboles
+      // el GPS del celular puede fallar por decenas de metros.
+      const margin = Math.round(accuracy);
+      gpsStatus.textContent = margin > 100
+        ? `Ubicación tomada con un margen de ± ${margin} m. Es un margen alto: si puede, espere un momento y vuelva a intentar.`
+        : `Ubicación tomada con un margen de ± ${margin} m.`;
+      gpsButton.disabled = false;
+    },
+    (error) => {
+      gpsStatus.textContent = GPS_ERRORS[error.code] ?? GPS_ERRORS[2];
+      gpsButton.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 },
+  );
 });
 
 // ---- Índice de secciones ----
