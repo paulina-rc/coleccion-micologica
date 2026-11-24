@@ -71,6 +71,47 @@
             <textarea name="environmental_conditions" rows="3"></textarea>
           </label>
         </div>
+        <!-- Ubicación. Estos datos no salen en la ficha pública del QR
+                     (public_specimen no los devuelve). -->
+        <div class="coords">
+          <div class="coords__head">
+            <div>
+              <h3 class="coords__title">Ubicación del hallazgo</h3>
+              <p class="coords__note">Toque el mapa o use el GPS. No se muestra en la ficha pública.</p>
+            </div>
+            <button type="button" class="btn btn--outline" id="gps-button">Usar mi ubicación</button>
+          </div>
+        
+          <!-- Texto y no type="number": acepta coma o punto decimal y el
+                       signo menos en cualquier teclado de celular. -->
+          <div class="grid grid--3">
+            <label class="field field--mono"><span>Latitud <span class="field__hint">(ej. 10.4512)</span></span>
+              <input type="text" name="latitude" id="latitude" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="field field--mono"><span>Longitud <span class="field__hint">(ej. -84.4321)</span></span>
+              <input type="text" name="longitude" id="longitude" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="field">Precisión
+              <select name="coordinate_precision" id="coordinate-precision">
+                <option value="point">Punto del hallazgo</option>
+                <option value="site">Aproximada (del sitio)</option>
+              </select>
+            </label>
+          </div>
+          <p class="coords__status" id="gps-status" role="status"></p>
+        
+          <div class="location-map" id="location-map" aria-label="Mapa para marcar la ubicación"></div>
+        
+          <div class="grid grid--2">
+            <label class="field field--mono"><span>Altitud mínima <span class="field__hint">(m s. n. m.)</span></span>
+              <input type="text" inputmode="numeric" name="altitude_min" id="altitude-min" autocomplete="off">
+            </label>
+            <label class="field field--mono"><span>Altitud máxima <span class="field__hint">(igual a la mínima si es un solo
+                  valor)</span></span>
+              <input type="text" inputmode="numeric" name="altitude_max" id="altitude-max" autocomplete="off">
+            </label>
+          </div>
+        </div>
       </section>
 
       <section class="card" id="campo" aria-labelledby="campo-title">
