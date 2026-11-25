@@ -7,7 +7,16 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 const root = import.meta.dirname;
 
 // Carpetas que no tienen páginas del sitio.
-const IGNORED = new Set(['node_modules', 'dist', 'public', 'src', 'supabase', 'docs', '.git', '.github']);
+const IGNORED = new Set([
+  'node_modules',
+  'dist',
+  'public',
+  'src',
+  'supabase',
+  'docs',
+  '.git',
+  '.github',
+]);
 
 // Busca todos los .html del proyecto para que Vite los publique.
 // Así una página nueva entra sola en la compilación: si hubiera que
@@ -20,7 +29,11 @@ function findPages(dir) {
       if (!IGNORED.has(entry.name)) Object.assign(pages, findPages(path));
     } else if (entry.name.endsWith('.html')) {
       // Nombre interno de la entrada: "h/index", "app/ingresar"…
-      pages[relative(root, path).replace(/\\/g, '/').replace(/\.html$/, '')] = path;
+      pages[
+        relative(root, path)
+          .replace(/\\/g, '/')
+          .replace(/\.html$/, '')
+      ] = path;
     }
   }
   return pages;

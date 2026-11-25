@@ -11,7 +11,6 @@ export function hideMessage(element) {
   element.textContent = '';
 }
 
-
 // Error de un campo: borde rojo y mensaje debajo, dentro de su .field.
 // aria-describedby hace que el lector de pantalla lea el mensaje al
 // llegar al campo. Con text vacío se quita el error.

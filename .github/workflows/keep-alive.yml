@@ -4,7 +4,7 @@ name: Mantener activa la base de datos
 # Esta tarea llama una vez al día a la función pública ping().
 on:
   schedule:
-    - cron: '17 9 * * *'   # 3:17 a. m. hora de Costa Rica
+    - cron: '17 9 * * *' # 3:17 a. m. hora de Costa Rica
   workflow_dispatch:
 
 permissions:

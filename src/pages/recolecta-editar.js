@@ -30,7 +30,10 @@ const isEdit = code !== null;
 
 if (isEdit) {
   const title = document.querySelector('#page-title');
-  title.replaceChildren('Editar ', Object.assign(document.createElement('i'), { textContent: 'recolecta' }));
+  title.replaceChildren(
+    'Editar ',
+    Object.assign(document.createElement('i'), { textContent: 'recolecta' })
+  );
   const tag = document.querySelector('#code-tag');
   tag.textContent = code;
   tag.classList.remove('code-tag--pending');
@@ -75,18 +78,26 @@ timePicker(timeStart, { onChange: () => checkTimes() });
 // da el mismo orden que compararlos como fechas u horas.
 function checkCollectedOn() {
   const value = collectedOn.value;
-  setFieldError(datePickerInstance.altInput,
-    value && value > todayLocal() ? 'La fecha de colecta no puede ser posterior a hoy.' : '');
+  setFieldError(
+    datePickerInstance.altInput,
+    value && value > todayLocal() ? 'La fecha de colecta no puede ser posterior a hoy.' : ''
+  );
 }
 
 function checkTimes() {
   const start = timeStart.value;
   const end = timeEnd.value;
-  setFieldError(timeEndPicker.altInput,
-    start && end && end < start ? 'La hora de fin no puede ser anterior a la de inicio.' : '');
+  setFieldError(
+    timeEndPicker.altInput,
+    start && end && end < start ? 'La hora de fin no puede ser anterior a la de inicio.' : ''
+  );
 }
 
-const dateFormat = new Intl.DateTimeFormat('es-CR', { day: 'numeric', month: 'short', year: 'numeric' });
+const dateFormat = new Intl.DateTimeFormat('es-CR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
 
 // "2026-10-19" → "19 oct 2026". Se agrega la hora para que el navegador
 // no la lea como medianoche UTC (sería el día anterior en Costa Rica).
@@ -122,7 +133,7 @@ for (const field of document.querySelectorAll('[data-people-role]')) {
 // créditos que tenía (al editar). El fotógrafo no se manda (paso 5).
 function readCredits() {
   return Object.fromEntries(
-    Object.entries(peoplePickers).map(([role, picker]) => [role, picker.getNames()]),
+    Object.entries(peoplePickers).map(([role, picker]) => [role, picker.getNames()])
   );
 }
 
@@ -144,11 +155,18 @@ try {
   for (const site of sites) addOption(siteSelect, site.id, site.name);
 
   if (!sites.length) {
-    showMessage(message, 'Todavía no hay sitios registrados. La persona administradora los agrega o llegan con la importación del Excel.', 'info');
+    showMessage(
+      message,
+      'Todavía no hay sitios registrados. La persona administradora los agrega o llegan con la importación del Excel.',
+      'info'
+    );
   }
 } catch (error) {
   console.error(error);
-  showMessage(message, 'No se pudieron cargar las giras, los sitios y las personas.Revise su conexión y recargue la página.');
+  showMessage(
+    message,
+    'No se pudieron cargar las giras, los sitios y las personas.Revise su conexión y recargue la página.'
+  );
 }
 
 // Al elegir una gira, se propone su fecha. Si la persona ya eligió una
@@ -237,63 +255,68 @@ gpsButton.addEventListener('click', () => {
       // El margen ayuda a decidir si confiar en el punto: bajo árboles
       // el GPS del celular puede fallar por decenas de metros.
       const margin = Math.round(accuracy);
-      gpsStatus.textContent = margin > 100
-        ? `Ubicación tomada con un margen de ± ${margin} m. Es un margen alto: si puede, espere un momento y vuelva a intentar.`
-        : `Ubicación tomada con un margen de ± ${margin} m.`;
+      gpsStatus.textContent =
+        margin > 100
+          ? `Ubicación tomada con un margen de ± ${margin} m. Es un margen alto: si puede, espere un momento y vuelva a intentar.`
+          : `Ubicación tomada con un margen de ± ${margin} m.`;
       gpsButton.disabled = false;
     },
     (error) => {
       gpsStatus.textContent = GPS_ERRORS[error.code] ?? GPS_ERRORS[2];
       gpsButton.disabled = false;
     },
-    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
   );
 });
 
-  // ---- Laboratorio ----
-  // La descripción se hace días después de la gira, por eso tiene su
-  // propia fecha. Misma regla que la fecha de colecta: no puede ser futura.
-  const describedOn = document.querySelector('#described-on');
-  const describedOnPicker = datePicker(describedOn, { onChange: () => checkDescribedOn() });
+// ---- Laboratorio ----
+// La descripción se hace días después de la gira, por eso tiene su
+// propia fecha. Misma regla que la fecha de colecta: no puede ser futura.
+const describedOn = document.querySelector('#described-on');
+const describedOnPicker = datePicker(describedOn, { onChange: () => checkDescribedOn() });
 
-  // Devuelve true si no hay error (lo usará el guardado, elemento 14).
-  function checkDescribedOn() {
-    const value = describedOn.value;
-    const error = value && value > todayLocal() ? 'La fecha de descripción no puede ser posterior a hoy.' : '';
-    setFieldError(describedOnPicker.altInput, error);
-    return !error;
+// Devuelve true si no hay error (lo usará el guardado, elemento 14).
+function checkDescribedOn() {
+  const value = describedOn.value;
+  const error =
+    value && value > todayLocal() ? 'La fecha de descripción no puede ser posterior a hoy.' : '';
+  setFieldError(describedOnPicker.altInput, error);
+  return !error;
+}
+
+// ---- Índice de secciones ----
+// Marca en el índice la sección que se está viendo. IntersectionObserver
+// avisa cuando una tarjeta entra en la franja superior de la pantalla,
+// sin calcular posiciones en cada scroll.
+const links = new Map(
+  [...document.querySelectorAll('.steps__link')].map((link) => [link.hash.slice(1), link])
+);
+
+function markCurrent(id) {
+  for (const [sectionId, link] of links) {
+    link.classList.toggle('is-current', sectionId === id);
+    if (sectionId === id) link.setAttribute('aria-current', 'step');
+    else link.removeAttribute('aria-current');
   }
+}
 
-  // ---- Índice de secciones ----
-  // Marca en el índice la sección que se está viendo. IntersectionObserver
-  // avisa cuando una tarjeta entra en la franja superior de la pantalla,
-  // sin calcular posiciones en cada scroll.
-  const links = new Map(
-    [...document.querySelectorAll('.steps__link')].map((link) => [link.hash.slice(1), link]),
-  );
-
-  function markCurrent(id) {
-    for (const [sectionId, link] of links) {
-      link.classList.toggle('is-current', sectionId === id);
-      if (sectionId === id) link.setAttribute('aria-current', 'step');
-      else link.removeAttribute('aria-current');
-    }
-  }
-
-  const observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver(
+  (entries) => {
     const visible = entries.filter((entry) => entry.isIntersecting);
     if (visible.length) markCurrent(visible[0].target.id);
-  }, { rootMargin: '0px 0px -70% 0px' }); // solo cuenta el 30 % superior de la pantalla
+  },
+  { rootMargin: '0px 0px -70% 0px' }
+); // solo cuenta el 30 % superior de la pantalla
 
-  for (const id of links.keys()) {
-    const section = document.getElementById(id);
-    if (section) observer.observe(section);
-  }
-  markCurrent('encabezado');
+for (const id of links.keys()) {
+  const section = document.getElementById(id);
+  if (section) observer.observe(section);
+}
+markCurrent('encabezado');
 
-  // ---- Guardar ----
-  // Por ahora solo evita que el formulario recargue la página.
-  // El guardado real con save_specimen llega en el elemento 14.
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-  });
+// ---- Guardar ----
+// Por ahora solo evita que el formulario recargue la página.
+// El guardado real con save_specimen llega en el elemento 14.
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+});

@@ -1,49 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Ingresar · Colección Micológica</title>
-  <link rel="stylesheet" href="/src/css/app.css">
-</head>
-<body>
-  <div class="auth">
-    <section class="auth__cover">
-      <span class="eyebrow">UNED · ECEN · CITTED</span>
-      <div>
-        <span class="eyebrow eyebrow--yellow">Región Huetar Norte</span>
-        <h1 class="auth__title">Colección<br><i>Micológica</i></h1>
-      </div>
-      <span class="auth__subtitle">Sistema de registro de macrohongos</span>
-    </section>
-
-    <main class="auth__panel">
-      <form id="login-form" class="auth__form" novalidate>
-        <div class="auth__logos">
-          <img src="/src/img/uned.png" alt="UNED" class="logo-uned">
-          <img src="/src/img/ecen.png" alt="Escuela de Ciencias Exactas y Naturales">
-          <img src="/src/img/citted.png" alt="CITTED">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Ingresar · Colección Micológica</title>
+    <link rel="stylesheet" href="/src/css/app.css" />
+  </head>
+  <body>
+    <div class="auth">
+      <section class="auth__cover">
+        <span class="eyebrow">UNED · ECEN · CITTED</span>
+        <div>
+          <span class="eyebrow eyebrow--yellow">Región Huetar Norte</span>
+          <h1 class="auth__title">Colección<br /><i>Micológica</i></h1>
         </div>
+        <span class="auth__subtitle">Sistema de registro de macrohongos</span>
+      </section>
 
-        <h2 class="auth__heading">Entrar</h2>
+      <main class="auth__panel">
+        <form id="login-form" class="auth__form" novalidate>
+          <div class="auth__logos">
+            <img src="/src/img/uned.png" alt="UNED" class="logo-uned" />
+            <img src="/src/img/ecen.png" alt="Escuela de Ciencias Exactas y Naturales" />
+            <img src="/src/img/citted.png" alt="CITTED" />
+          </div>
 
-        <p id="form-message" class="alert" role="alert" hidden></p>
+          <h2 class="auth__heading">Entrar</h2>
 
-        <label class="field">Correo
-          <input type="email" name="email" autocomplete="username" required>
-        </label>
-        <label class="field">Contraseña
-          <input type="password" name="password" autocomplete="current-password" required>
-        </label>
+          <p id="form-message" class="alert" role="alert" hidden></p>
 
-        <button type="submit" class="btn btn--block">Iniciar sesión</button>
+          <label class="field"
+            >Correo
+            <input type="email" name="email" autocomplete="username" required />
+          </label>
+          <label class="field"
+            >Contraseña
+            <input type="password" name="password" autocomplete="current-password" required />
+          </label>
 
-        <p class="auth__note">¿Olvidó su contraseña? Pida a la persona administradora que le asigne una nueva.</p>
-      </form>
-    </main>
-  </div>
+          <button type="submit" class="btn btn--block">Iniciar sesión</button>
 
-  <script type="module" src="/src/pages/ingresar.js"></script>
-</body>
+          <p class="auth__note">
+            ¿Olvidó su contraseña? Pida a la persona administradora que le asigne una nueva.
+          </p>
+        </form>
+      </main>
+    </div>
+
+    <script type="module" src="/src/pages/ingresar.js"></script>
+  </body>
 </html>

@@ -7,10 +7,10 @@ import { supabase } from '../supabase.js';
 // No se crean personas desde aquí: save_specimen crea las nuevas al
 // guardar la recolecta, dentro de la misma transacción.
 export async function listPeople() {
-    const { data, error } = await supabase
-        .from('people')
-        .select('id, credit_name, full_name')
-        .order('credit_name');
-    if (error) throw error;
-    return data;
+  const { data, error } = await supabase
+    .from('people')
+    .select('id, credit_name, full_name')
+    .order('credit_name');
+  if (error) throw error;
+  return data;
 }
