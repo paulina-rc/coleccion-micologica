@@ -2,11 +2,21 @@
 import { readdirSync } from 'node:fs';
 import { resolve, relative } from 'node:path';
 import { defineConfig } from 'vite';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 const root = import.meta.dirname;
 
 // Carpetas que no tienen páginas del sitio.
-const IGNORED = new Set(['node_modules', 'dist', 'public', 'src', 'supabase', 'docs', '.git', '.github']);
+const IGNORED = new Set([
+  'node_modules',
+  'dist',
+  'public',
+  'src',
+  'supabase',
+  'docs',
+  '.git',
+  '.github',
+]);
 
 // Busca todos los .html del proyecto para que Vite los publique.
 // Así una página nueva entra sola en la compilación: si hubiera que
@@ -19,16 +29,31 @@ function findPages(dir) {
       if (!IGNORED.has(entry.name)) Object.assign(pages, findPages(path));
     } else if (entry.name.endsWith('.html')) {
       // Nombre interno de la entrada: "h/index", "app/ingresar"…
-      pages[relative(root, path).replace(/\\/g, '/').replace(/\.html$/, '')] = path;
+      pages[
+        relative(root, path)
+          .replace(/\\/g, '/')
+          .replace(/\.html$/, '')
+      ] = path;
     }
   }
   return pages;
 }
 
-export default defineConfig({
+// mode es 'development' con npm run dev, 'production' con npm run build
+// y 'phone' con npm run dev:phone.
+export default defineConfig(({ mode }) => ({
   // Ruta donde vive el sitio. En GitHub Pages es /coleccion-micologica/.
   // Al migrar al hosting de la UNED se compila con BASE_PATH=/ (ver docs/05).
   base: process.env.BASE_PATH ?? '/coleccion-micologica/',
+  // Sitio de varias páginas: si una página no existe, el servidor de
+  // desarrollo responde 404. Con el valor por defecto ('spa') devolvía
+  // index.html, cuya redirección relativa (app/recolectas.html) apuntaba
+  // a app/app/recolectas.html, que tampoco existía: se recargaba sin fin.
+  appType: 'mpa',
+  // Solo con "npm run dev:phone": servidor local con HTTPS para probar en
+  // el celular. El GPS del navegador exige HTTPS (o localhost); el
+  // certificado es de prueba, por eso el celular muestra una advertencia.
+  plugins: mode === 'phone' ? [basicSsl()] : [],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
@@ -36,4 +61,4 @@ export default defineConfig({
       input: findPages(root),
     },
   },
-});
+}));

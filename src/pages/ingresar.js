@@ -24,8 +24,10 @@ function errorText(error) {
   if (error.code === 'over_request_rate_limit' || error.status === 429) {
     return 'Demasiados intentos seguidos. Espere unos minutos y vuelva a intentarlo.';
   }
-  if (error.code === 'user_banned') return 'Esta cuenta está bloqueada. Consulte con la persona administradora.';
-  if (error.name === 'AuthRetryableFetchError') return 'No hay conexión con el servidor. Revise su internet.';
+  if (error.code === 'user_banned')
+    return 'Esta cuenta está bloqueada. Consulte con la persona administradora.';
+  if (error.name === 'AuthRetryableFetchError')
+    return 'No hay conexión con el servidor. Revise su internet.';
   return 'No se pudo iniciar sesión. Inténtelo de nuevo.';
 }
 

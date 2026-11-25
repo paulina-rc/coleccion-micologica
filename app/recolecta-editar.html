@@ -1,68 +1,514 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Nueva recolecta · Colección Micológica</title>
-  <link rel="stylesheet" href="/src/css/app.css">
-</head>
-<body class="is-loading has-actionbar">
-  <main class="page page--narrow">
-    <div class="page__head">
-      <h1 class="page__title" id="page-title">Nueva <i>recolecta</i></h1>
-      <!-- El código lo asigna la base al guardar (04_specimen_code.sql) -->
-      <span class="code-tag code-tag--pending" id="code-tag">Código al guardar</span>
-    </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Nueva recolecta · Colección Micológica</title>
+    <link rel="stylesheet" href="/src/css/app.css" />
+  </head>
 
-    <!-- Índice: cada número salta a su sección. No obliga a llenar en orden:
-         en campo se llena el encabezado y el laboratorio se completa días después. -->
-    <nav aria-label="Secciones del formulario">
-      <ol class="steps">
-        <li><a class="steps__link" href="#encabezado"><span class="steps__num">1</span>Encabezado</a></li>
-        <li><a class="steps__link" href="#campo"><span class="steps__num">2</span>Campo</a></li>
-        <li><a class="steps__link" href="#laboratorio"><span class="steps__num">3</span>Laboratorio</a></li>
-        <li><a class="steps__link" href="#taxonomia"><span class="steps__num">4</span>Taxonomía</a></li>
-        <li><a class="steps__link" href="#coleccion"><span class="steps__num">5</span>Colección</a></li>
-      </ol>
-    </nav>
-
-    <form id="specimen-form" class="form-stack" novalidate>
-      <p id="form-message" class="alert" role="alert" hidden></p>
-
-      <section class="card" id="encabezado" aria-labelledby="encabezado-title">
-        <h2 class="card__title" id="encabezado-title">Encabezado</h2>
-      </section>
-
-      <section class="card" id="campo" aria-labelledby="campo-title">
-        <h2 class="card__title" id="campo-title">Registro de campo</h2>
-      </section>
-
-      <section class="card" id="laboratorio" aria-labelledby="laboratorio-title">
-        <h2 class="card__title" id="laboratorio-title">Observación en laboratorio</h2>
-      </section>
-
-      <div class="card-row">
-        <section class="card card--label" id="taxonomia" aria-labelledby="taxonomia-title">
-          <h2 class="card__title" id="taxonomia-title">Determinavit · Taxonomía</h2>
-        </section>
-
-        <section class="card" id="coleccion" aria-labelledby="coleccion-title">
-          <h2 class="card__title" id="coleccion-title">Colección</h2>
-        </section>
+  <body class="is-loading has-actionbar">
+    <main class="page page--narrow">
+      <div class="page__head">
+        <h1 class="page__title" id="page-title">Nueva <i>recolecta</i></h1>
+        <!-- El código lo asigna la base al guardar (04_specimen_code.sql) -->
+        <span class="code-tag code-tag--pending" id="code-tag">Código al guardar</span>
       </div>
-    </form>
-  </main>
 
-  <!-- Fuera del <main> para que ocupe todo el ancho; form="specimen-form"
+      <!-- Índice: cada número salta a su sección. No obliga a llenar en orden:
+         en campo se llena el encabezado y el laboratorio se completa días después. -->
+      <nav aria-label="Secciones del formulario">
+        <ol class="steps">
+          <li>
+            <a class="steps__link" href="#encabezado"
+              ><span class="steps__num">1</span>Encabezado</a
+            >
+          </li>
+          <li>
+            <a class="steps__link" href="#campo"><span class="steps__num">2</span>Campo</a>
+          </li>
+          <li>
+            <a class="steps__link" href="#laboratorio"
+              ><span class="steps__num">3</span>Laboratorio</a
+            >
+          </li>
+          <li>
+            <a class="steps__link" href="#taxonomia"><span class="steps__num">4</span>Taxonomía</a>
+          </li>
+          <li>
+            <a class="steps__link" href="#coleccion"><span class="steps__num">5</span>Colección</a>
+          </li>
+        </ol>
+      </nav>
+
+      <form id="specimen-form" class="form-stack" novalidate>
+        <p id="form-message" class="alert" role="alert" hidden></p>
+
+        <section class="card" id="encabezado" aria-labelledby="encabezado-title">
+          <h2 class="card__title" id="encabezado-title">Encabezado</h2>
+
+          <!-- Cuando una etiqueta lleva aclaración, texto y aclaración van en un
+             <span> para que queden en la misma línea (.field es una columna). -->
+          <div class="grid grid--3">
+            <!-- Las opciones las llena recolecta-editar.js desde la base -->
+            <label class="field"
+              >Gira
+              <select name="trip_id" id="trip-select">
+                <option value="">Sin gira (colecta suelta)</option>
+              </select>
+            </label>
+            <label class="field"
+              >Sitio
+              <select name="site_id" id="site-select">
+                <option value="">Elegir sitio…</option>
+              </select>
+            </label>
+            <!-- type="text": el calendario y el selector de hora los dibuja
+               src/pickers.js (flatpickr), no el navegador -->
+            <label class="field"
+              >Fecha de colecta
+              <input type="text" name="collected_on" id="collected-on" placeholder="Elegir fecha" />
+            </label>
+
+            <!-- Sin "Código de campo": el código lo asigna la base (CITTED-####).
+               El código M## del Excel llega solo con la importación (paso 9). -->
+            <label class="field"
+              >Hora de inicio
+              <input type="text" name="time_start" id="time-start" placeholder="--:--" />
+            </label>
+            <label class="field"
+              >Hora de fin
+              <input type="text" name="time_end" id="time-end" placeholder="--:--" />
+            </label>
+            <label class="field"
+              ><span>Localidad <span class="field__hint">(sendero o sector)</span></span>
+              <input type="text" name="locality" maxlength="200" />
+            </label>
+
+            <label class="field grid__wide"
+              >Condiciones ambientales
+              <textarea name="environmental_conditions" rows="3"></textarea>
+            </label>
+          </div>
+
+          <!-- Créditos, con los nombres de la ficha oficial. Las etiquetas
+                     y la lista de sugerencias las agrega src/people-picker.js.
+                     Los campos no tienen name: los nombres se leen del selector,
+                     no del texto que quede escrito en el campo. -->
+          <div class="credits">
+            <h3 class="credits__title">Créditos</h3>
+            <p class="credits__note">
+              Puede agregar varios nombres en cada rol. El orden en que los agrega es el orden del
+              crédito.
+            </p>
+            <div class="grid grid--2">
+              <div class="field people" data-people-role="collector">
+                <label for="people-collector">Colector</label>
+                <input
+                  type="text"
+                  id="people-collector"
+                  maxlength="120"
+                  placeholder="Escriba un nombre"
+                />
+              </div>
+              <div class="field people" data-people-role="co_investigator">
+                <label for="people-co-investigator">Asistentes</label>
+                <input
+                  type="text"
+                  id="people-co-investigator"
+                  maxlength="120"
+                  placeholder="Escriba un nombre"
+                />
+              </div>
+              <div class="field people" data-people-role="identifier">
+                <label for="people-identifier">Identifica</label>
+                <input
+                  type="text"
+                  id="people-identifier"
+                  maxlength="120"
+                  placeholder="Escriba un nombre"
+                />
+              </div>
+              <div class="field people" data-people-role="describer">
+                <label for="people-describer">Describe</label>
+                <input
+                  type="text"
+                  id="people-describer"
+                  maxlength="120"
+                  placeholder="Escriba un nombre"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Ubicación. Estos datos no salen en la ficha pública del QR
+                     (public_specimen no los devuelve). -->
+          <div class="coords">
+            <div class="coords__head">
+              <div>
+                <h3 class="coords__title">Ubicación del hallazgo</h3>
+                <p class="coords__note">
+                  Toque el mapa o use el GPS. No se muestra en la ficha pública.
+                </p>
+              </div>
+              <button type="button" class="btn btn--outline" id="gps-button">
+                Usar mi ubicación
+              </button>
+            </div>
+
+            <!-- Texto y no type="number": acepta coma o punto decimal y el
+                       signo menos en cualquier teclado de celular. -->
+            <div class="grid grid--3">
+              <label class="field field--mono"
+                ><span>Latitud <span class="field__hint">(ej. 10.4512)</span></span>
+                <input
+                  type="text"
+                  name="latitude"
+                  id="latitude"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field field--mono"
+                ><span>Longitud <span class="field__hint">(ej. -84.4321)</span></span>
+                <input
+                  type="text"
+                  name="longitude"
+                  id="longitude"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Precisión
+                <select name="coordinate_precision" id="coordinate-precision">
+                  <option value="point">Punto del hallazgo</option>
+                  <option value="site">Aproximada (del sitio)</option>
+                </select>
+              </label>
+            </div>
+            <p class="coords__status" id="gps-status" role="status"></p>
+
+            <div
+              class="location-map"
+              id="location-map"
+              aria-label="Mapa para marcar la ubicación"
+            ></div>
+
+            <div class="grid grid--2">
+              <label class="field field--mono"
+                ><span>Altitud mínima <span class="field__hint">(m s. n. m.)</span></span>
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  name="altitude_min"
+                  id="altitude-min"
+                  autocomplete="off"
+                />
+              </label>
+              <label class="field field--mono"
+                ><span
+                  >Altitud máxima
+                  <span class="field__hint">(igual a la mínima si es un solo valor)</span></span
+                >
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  name="altitude_max"
+                  id="altitude-max"
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="campo" aria-labelledby="campo-title">
+          <h2 class="card__title" id="campo-title">Registro de campo</h2>
+
+          <!-- Campos de la tabla "Registro de campo" de la ficha oficial; algunos
+                   campos cortos se reacomodan para quedar en pares.
+                   Regla de nombres (la usa el guardado, elemento 14):
+                   - columna de specimens: el nombre tal cual (name="substrate");
+                   - columna de field_descriptions: prefijo "field." (name="field.body_shape").
+                   Así el guardado arma solo el objeto que espera save_specimen. -->
+          <div class="grid grid--2">
+            <!-- Lo que el equipo anotó en la libreta ("¿Xylaria?"). Se guarda
+                     tal cual y no se mezcla con la taxonomía final (sección 4). -->
+            <label class="field grid__wide"
+              ><span
+                >Identificación aproximada
+                <span class="field__hint">(tal como se anotó en campo)</span></span
+              >
+              <input type="text" name="identification_text" maxlength="200" />
+            </label>
+            <label class="field"
+              >Tipo de sustrato
+              <input type="text" name="substrate" maxlength="200" />
+            </label>
+            <label class="field"
+              >Ubicación en el bosque o sitio
+              <input type="text" name="field.forest_location" maxlength="200" />
+            </label>
+
+            <label class="field grid__wide"
+              >Forma general del cuerpo fructífero
+              <textarea name="field.body_shape" rows="3"></textarea>
+            </label>
+
+            <label class="field"
+              >Color en fresco
+              <input type="text" name="field.color_fresh" maxlength="200" />
+            </label>
+            <label class="field"
+              >Color manipulado
+              <input type="text" name="field.color_handled" maxlength="200" />
+            </label>
+            <label class="field"
+              >Olor en fresco
+              <input type="text" name="field.odor_fresh" maxlength="200" />
+            </label>
+            <label class="field"
+              >Olor colectado
+              <input type="text" name="field.odor_collected" maxlength="200" />
+            </label>
+
+            <!-- Texto y no número: en la ficha se escribe "+100" o "varios". -->
+            <label class="field"
+              ><span
+                >Cantidad de cuerpos fructíferos <span class="field__hint">(ej. +100)</span></span
+              >
+              <input type="text" name="field.fruiting_body_count" maxlength="50" />
+            </label>
+            <label class="field"
+              >Hábito de crecimiento
+              <input type="text" name="field.growth_habit" maxlength="200" />
+            </label>
+            <label class="field"
+              ><span>Mapa espórico <span class="field__hint">(color de la esporada)</span></span>
+              <input type="text" name="field.spore_print" maxlength="200" />
+            </label>
+            <label class="field"
+              >Humedad
+              <input type="text" name="field.humidity" maxlength="200" />
+            </label>
+
+            <label class="field grid__wide"
+              >Usos
+              <textarea name="uses" rows="3"></textarea>
+            </label>
+          </div>
+        </section>
+
+        <section class="card" id="laboratorio" aria-labelledby="laboratorio-title">
+          <h2 class="card__title" id="laboratorio-title">Observación en laboratorio</h2>
+
+          <!-- Campos de la tabla "Observación en laboratorio" de la ficha oficial,
+                   con sus mismas aclaraciones. Prefijo "lab.": van a lab_descriptions.
+                   Quién describe se anota en Créditos (encabezado). -->
+          <div class="grid grid--2">
+            <label class="field grid__wide"
+              ><span
+                >Píleo
+                <span class="field__hint"
+                  >(tamaño, forma, color, margen, superficie, contexto)</span
+                ></span
+              >
+              <textarea name="lab.pileus" rows="4"></textarea>
+            </label>
+            <label class="field grid__wide"
+              ><span
+                >Himenóforo
+                <span class="field__hint"
+                  >(tipo, color, densidad, libre o adherido al estípite)</span
+                ></span
+              >
+              <textarea name="lab.hymenophore" rows="4"></textarea>
+            </label>
+            <label class="field grid__wide"
+              ><span
+                >Estípite o pie <span class="field__hint">(forma, superficie, posición)</span></span
+              >
+              <textarea name="lab.stipe" rows="4"></textarea>
+            </label>
+            <label class="field grid__wide"
+              ><span
+                >Estructuras asociadas
+                <span class="field__hint"
+                  >(anillo, volva, cortina, escamas, coberturas gelatinosas)</span
+                ></span
+              >
+              <textarea name="lab.associated_structures" rows="3"></textarea>
+            </label>
+
+            <label class="field"
+              >Características organolépticas
+              <textarea name="lab.organoleptic" rows="3"></textarea>
+            </label>
+            <!-- type="text": el calendario lo dibuja src/pickers.js, igual que la fecha de colecta -->
+            <label class="field"
+              >Fecha de descripción
+              <input
+                type="text"
+                name="lab.described_on"
+                id="described-on"
+                placeholder="Elegir fecha"
+              />
+            </label>
+          </div>
+        </section>
+
+        <div class="card-row">
+          <section class="card card--label" id="taxonomia" aria-labelledby="taxonomia-title">
+            <h2 class="card__title" id="taxonomia-title">Determinavit · Taxonomía</h2>
+
+            <!-- Taxonomía final, separada de la identificación aproximada de
+                 campo (sección 2). Prefijo "taxon.": save_specimen busca el
+                 taxón por género + especie y, si no existe, lo crea sin revisar
+                 para que la especialista lo confirme. Sin placeholders: no se
+                 muestran nombres científicos de ejemplo. -->
+            <div class="grid grid--2">
+              <!-- Dentro de la cuadrícula para heredar su espaciado -->
+              <fieldset class="pills grid__wide">
+                <legend>Estado de la identificación</legend>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="unidentified" checked />
+                  <span>Sin identificar</span>
+                </label>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="to_verify" />
+                  <span>Por verificar</span>
+                </label>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="genus" />
+                  <span>Hasta género</span>
+                </label>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="species" />
+                  <span>Hasta especie</span>
+                </label>
+              </fieldset>
+
+              <label class="field"
+                >Orden
+                <input
+                  type="text"
+                  name="taxon.order"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Familia
+                <input
+                  type="text"
+                  name="taxon.family"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <!-- field--science: género y especie en cursiva, como se escriben -->
+              <label class="field field--science"
+                >Género
+                <input
+                  type="text"
+                  name="taxon.genus"
+                  id="taxon-genus"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field field--science"
+                ><span>Especie <span class="field__hint">(epíteto)</span></span>
+                <input
+                  type="text"
+                  name="taxon.species"
+                  id="taxon-species"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Autoridad
+                <input
+                  type="text"
+                  name="taxon.authority"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Fecha de identificación
+                <input
+                  type="text"
+                  name="identified_on"
+                  id="identified-on"
+                  placeholder="Elegir fecha"
+                />
+              </label>
+            </div>
+          </section>
+
+          <section class="card" id="coleccion" aria-labelledby="coleccion-title">
+            <h2 class="card__title" id="coleccion-title">Colección</h2>
+
+            <!-- Dónde está guardada la muestra en la colección del CITTED.
+                 Texto y no número: un gabinete o una caja pueden tener letras. -->
+            <div class="grid grid--3">
+              <label class="field field--mono"
+                >Gabinete
+                <input type="text" name="cabinet" maxlength="50" autocomplete="off" />
+              </label>
+              <label class="field field--mono"
+                >Anaquel
+                <input type="text" name="shelf" maxlength="50" autocomplete="off" />
+              </label>
+              <label class="field field--mono"
+                >Caja
+                <input type="text" name="box" maxlength="50" autocomplete="off" />
+              </label>
+              <label class="field grid__wide"
+                >Observaciones
+                <textarea name="observations" rows="4"></textarea>
+              </label>
+            </div>
+          </section>
+        </div>
+      </form>
+    </main>
+
+    <!-- Fuera del <main> para que ocupe todo el ancho; form="specimen-form"
        une el botón al formulario aunque esté fuera de él. -->
-  <div class="actionbar">
-    <div class="actionbar__inner">
-      <a class="actionbar__cancel" id="cancel-link" href="recolectas.html">Cancelar</a>
-      <button type="submit" form="specimen-form" class="btn btn--yellow" id="save-button">Guardar</button>
+    <div class="actionbar">
+      <div class="actionbar__inner">
+        <!-- form="specimen-form" porque la barra está fuera del <form>.
+                             Marcado = "published", sin marcar = "in_research": la conversión
+                             la hace el guardado (elemento 14). Empieza sin marcar: una
+                             recolecta nueva nunca sale publicada por accidente. -->
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="publication-switch"
+            name="publication_status"
+            value="published"
+            form="specimen-form"
+          />
+          <span class="switch__track"></span>
+          <span id="publication-label">En investigación</span>
+        </label>
+        <a class="actionbar__cancel" id="cancel-link" href="recolectas.html">Cancelar</a>
+        <button type="submit" form="specimen-form" class="btn btn--yellow" id="save-button">
+          Guardar
+        </button>
+      </div>
     </div>
-  </div>
 
-  <script type="module" src="/src/pages/recolecta-editar.js"></script>
-</body>
+    <script type="module" src="/src/pages/recolecta-editar.js"></script>
+  </body>
 </html>

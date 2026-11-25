@@ -13,7 +13,10 @@ import { PAGES, go, currentAppPage } from './paths.js';
 export async function loadProfile() {
   // getUser() confirma la sesión con el servidor de Supabase.
   // getSession() solo lee el navegador y aceptaría una sesión vencida o revocada.
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
   if (error || !user) return null;
 
   // RLS solo deja leer profiles a cuentas activas (is_staff()):

@@ -30,7 +30,10 @@ if (firstLogin) {
     'Es su primer ingreso. Cambie la contraseña temporal por una que solo usted conozca.';
   // Si no la quiere cambiar ahora, la única salida es cerrar sesión.
   secondary.textContent = 'Cerrar sesión';
-  secondary.addEventListener('click', (event) => { event.preventDefault(); signOut(); });
+  secondary.addEventListener('click', (event) => {
+    event.preventDefault();
+    signOut();
+  });
 } else {
   document.querySelector('#intro').textContent = 'Escriba su nueva contraseña.';
   secondary.textContent = 'Volver';
@@ -38,17 +41,23 @@ if (firstLogin) {
 }
 
 function validate(password, confirm) {
-  if (password.length < MIN_LENGTH) return `La contraseña debe tener al menos ${MIN_LENGTH} caracteres.`;
-  if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) return 'La contraseña debe tener letras y números.';
+  if (password.length < MIN_LENGTH)
+    return `La contraseña debe tener al menos ${MIN_LENGTH} caracteres.`;
+  if (!/[a-zA-Z]/.test(password) || !/\d/.test(password))
+    return 'La contraseña debe tener letras y números.';
   if (password !== confirm) return 'Las dos contraseñas no coinciden.';
   return null;
 }
 
 function errorText(error) {
-  if (error.code === 'same_password') return 'La contraseña nueva debe ser distinta de la anterior.';
-  if (error.code === 'weak_password') return 'La contraseña es muy débil. Use una más larga, con letras y números.';
-  if (error.code === 'reauthentication_needed') return 'Por seguridad, cierre sesión, vuelva a entrar y cambie la contraseña.';
-  if (error.name === 'AuthRetryableFetchError') return 'No hay conexión con el servidor. Revise su internet.';
+  if (error.code === 'same_password')
+    return 'La contraseña nueva debe ser distinta de la anterior.';
+  if (error.code === 'weak_password')
+    return 'La contraseña es muy débil. Use una más larga, con letras y números.';
+  if (error.code === 'reauthentication_needed')
+    return 'Por seguridad, cierre sesión, vuelva a entrar y cambie la contraseña.';
+  if (error.name === 'AuthRetryableFetchError')
+    return 'No hay conexión con el servidor. Revise su internet.';
   return 'No se pudo cambiar la contraseña. Inténtelo de nuevo.';
 }
 
@@ -81,7 +90,10 @@ form.addEventListener('submit', async (event) => {
   if (firstLogin) {
     const { error: rpcError } = await supabase.rpc('mark_password_changed');
     if (rpcError) {
-      showMessage(message, 'La contraseña se cambió, pero no se pudo actualizar su perfil. Recargue la página.');
+      showMessage(
+        message,
+        'La contraseña se cambió, pero no se pudo actualizar su perfil. Recargue la página.'
+      );
       button.disabled = false;
       button.textContent = 'Guardar contraseña';
       return;

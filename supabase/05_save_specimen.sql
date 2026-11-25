@@ -176,7 +176,12 @@ begin
     update public.specimens s set
       trip_id                  = (p_data ->> 'trip_id')::bigint,
       site_id                  = (p_data ->> 'site_id')::bigint,
-      field_code               = public.clean_text(p_data ->> 'field_code'),
+      -- El formulario ya no manda field_code (el M## del Excel llega con
+      -- la importación). Si la clave no viene, se conserva el valor que
+      -- había; si viene (importación), se actualiza.
+      field_code               = case when p_data ? 'field_code'
+                                      then public.clean_text(p_data ->> 'field_code')
+                                      else s.field_code end,
       locality                 = public.clean_text(p_data ->> 'locality'),
       collected_on             = (p_data ->> 'collected_on')::date,
       time_start               = v_start,
