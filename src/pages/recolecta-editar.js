@@ -268,6 +268,17 @@ gpsButton.addEventListener('click', () => {
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
   );
 });
+// ---- Publicación ----
+// El texto dice el estado actual, no la acción: así se lee igual con o
+// sin lector de pantalla ("En investigación" / "Publicada").
+const publicationSwitch = document.querySelector('#publication-switch');
+const publicationLabel = document.querySelector('#publication-label');
+
+function showPublicationStatus() {
+  publicationLabel.textContent = publicationSwitch.checked ? 'Publicada' : 'En investigación';
+}
+publicationSwitch.addEventListener('change', showPublicationStatus);
+
 // ---- Taxonomía ----
 const identifiedOn = document.querySelector('#identified-on');
 const identifiedOnPicker = datePicker(identifiedOn, { onChange: () => checkIdentifiedOn() });

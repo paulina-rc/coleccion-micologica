@@ -487,6 +487,21 @@
        une el botón al formulario aunque esté fuera de él. -->
     <div class="actionbar">
       <div class="actionbar__inner">
+        <!-- form="specimen-form" porque la barra está fuera del <form>.
+                             Marcado = "published", sin marcar = "in_research": la conversión
+                             la hace el guardado (elemento 14). Empieza sin marcar: una
+                             recolecta nueva nunca sale publicada por accidente. -->
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="publication-switch"
+            name="publication_status"
+            value="published"
+            form="specimen-form"
+          />
+          <span class="switch__track"></span>
+          <span id="publication-label">En investigación</span>
+        </label>
         <a class="actionbar__cancel" id="cancel-link" href="recolectas.html">Cancelar</a>
         <button type="submit" form="specimen-form" class="btn btn--yellow" id="save-button">
           Guardar
