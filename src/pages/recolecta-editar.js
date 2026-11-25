@@ -268,6 +268,36 @@ gpsButton.addEventListener('click', () => {
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
   );
 });
+// ---- Taxonomía ----
+const identifiedOn = document.querySelector('#identified-on');
+const identifiedOnPicker = datePicker(identifiedOn, { onChange: () => checkIdentifiedOn() });
+const genusInput = document.querySelector('#taxon-genus');
+const speciesInput = document.querySelector('#taxon-species');
+
+// Devuelve true si no hay error (lo usará el guardado, elemento 14).
+function checkIdentifiedOn() {
+  const value = identifiedOn.value;
+  const error =
+    value && value > todayLocal() ? 'La fecha de identificación no puede ser posterior a hoy.' : '';
+  setFieldError(identifiedOnPicker.altInput, error);
+  return !error;
+}
+
+// Un epíteto sin género no es un nombre científico. Es la misma regla que
+// revisa save_specimen en el servidor; aquí solo se avisa antes.
+// Las mayúsculas no se corrigen aquí: la base guarda "Xylaria polymorpha"
+// aunque se escriba "xylaria Polymorpha".
+function checkTaxon() {
+  const error =
+    speciesInput.value.trim() && !genusInput.value.trim()
+      ? 'Para escribir la especie hay que indicar el género.'
+      : '';
+  setFieldError(speciesInput, error);
+  return !error;
+}
+
+genusInput.addEventListener('change', checkTaxon);
+speciesInput.addEventListener('change', checkTaxon);
 
 // ---- Laboratorio ----
 // La descripción se hace días después de la gira, por eso tiene su

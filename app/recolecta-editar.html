@@ -362,6 +362,97 @@
         <div class="card-row">
           <section class="card card--label" id="taxonomia" aria-labelledby="taxonomia-title">
             <h2 class="card__title" id="taxonomia-title">Determinavit · Taxonomía</h2>
+
+            <!-- Taxonomía final, separada de la identificación aproximada de
+                 campo (sección 2). Prefijo "taxon.": save_specimen busca el
+                 taxón por género + especie y, si no existe, lo crea sin revisar
+                 para que la especialista lo confirme. Sin placeholders: no se
+                 muestran nombres científicos de ejemplo. -->
+            <div class="grid grid--2">
+              <!-- Dentro de la cuadrícula para heredar su espaciado -->
+              <fieldset class="pills grid__wide">
+                <legend>Estado de la identificación</legend>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="unidentified" checked />
+                  <span>Sin identificar</span>
+                </label>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="to_verify" />
+                  <span>Por verificar</span>
+                </label>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="genus" />
+                  <span>Hasta género</span>
+                </label>
+                <label class="pill">
+                  <input type="radio" name="identification_status" value="species" />
+                  <span>Hasta especie</span>
+                </label>
+              </fieldset>
+
+              <label class="field"
+                >Orden
+                <input
+                  type="text"
+                  name="taxon.order"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Familia
+                <input
+                  type="text"
+                  name="taxon.family"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <!-- field--science: género y especie en cursiva, como se escriben -->
+              <label class="field field--science"
+                >Género
+                <input
+                  type="text"
+                  name="taxon.genus"
+                  id="taxon-genus"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field field--science"
+                ><span>Especie <span class="field__hint">(epíteto)</span></span>
+                <input
+                  type="text"
+                  name="taxon.species"
+                  id="taxon-species"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Autoridad
+                <input
+                  type="text"
+                  name="taxon.authority"
+                  maxlength="120"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </label>
+              <label class="field"
+                >Fecha de identificación
+                <input
+                  type="text"
+                  name="identified_on"
+                  id="identified-on"
+                  placeholder="Elegir fecha"
+                />
+              </label>
+            </div>
           </section>
 
           <section class="card" id="coleccion" aria-labelledby="coleccion-title">
