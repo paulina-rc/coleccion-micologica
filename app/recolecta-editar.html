@@ -457,6 +457,27 @@
 
           <section class="card" id="coleccion" aria-labelledby="coleccion-title">
             <h2 class="card__title" id="coleccion-title">Colección</h2>
+
+            <!-- Dónde está guardada la muestra en la colección del CITTED.
+                 Texto y no número: un gabinete o una caja pueden tener letras. -->
+            <div class="grid grid--3">
+              <label class="field field--mono"
+                >Gabinete
+                <input type="text" name="cabinet" maxlength="50" autocomplete="off" />
+              </label>
+              <label class="field field--mono"
+                >Anaquel
+                <input type="text" name="shelf" maxlength="50" autocomplete="off" />
+              </label>
+              <label class="field field--mono"
+                >Caja
+                <input type="text" name="box" maxlength="50" autocomplete="off" />
+              </label>
+              <label class="field grid__wide"
+                >Observaciones
+                <textarea name="observations" rows="4"></textarea>
+              </label>
+            </div>
           </section>
         </div>
       </form>
