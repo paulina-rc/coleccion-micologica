@@ -11,7 +11,7 @@ import { createLocationMap } from '../location-map.js';
 import { parseDecimal, parseAltitude, coordinateErrors, altitudeErrors } from '../coordinates.js';
 import { listPeople } from '../api/people.js';
 import { createPeoplePicker } from '../people-picker.js';
-import { saveSpecimen } from '../api/specimens.js';
+import { saveSpecimen, getSpecimen } from '../api/specimens.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -153,6 +153,10 @@ function checkCredits() {
   return Object.values(peoplePickers).every((picker) => !picker.hasPendingText());
 }
 
+// Si las listas no cargan, no se deja editar: el formulario guardaría la
+// gira y el sitio vacíos aunque la recolecta los tenga.
+let catalogsLoaded = false;
+
 try {
   const [trips, sites, persons] = await Promise.all([listTrips(), listSites(), listPeople()]);
   people.push(...persons);
@@ -163,6 +167,7 @@ try {
     tripDates.set(String(trip.id), trip.started_on);
   }
   for (const site of sites) addOption(siteSelect, site.id, site.name);
+  catalogsLoaded = true;
 
   if (!sites.length) {
     showMessage(
@@ -368,18 +373,6 @@ markCurrent('encabezado');
 // ---- Guardar ----
 const saveButton = document.querySelector('#save-button');
 
-// Hasta que exista la carga de una recolecta (elemento 15), abrir ?c=
-// muestra el formulario vacío, y guardarlo borraría los datos que tiene.
-// Por eso, en ese caso, no se deja guardar.
-if (isEdit) {
-  saveButton.disabled = true;
-  showMessage(
-    message,
-    'Abrir una recolecta existente para editarla todavía no está disponible.',
-    'info'
-  );
-}
-
 // Campos que la base guarda como número o fecha: un texto vacío ("")
 // no se puede convertir en la base, así que se manda null.
 // Las coordenadas y la altitud pasan por las mismas funciones que las
@@ -480,3 +473,68 @@ form.addEventListener('submit', async (event) => {
   }
   message.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
+
+// ---- Cargar una recolecta para editar (?c=CITTED-0077) ----
+// Va al final del archivo porque necesita que ya existan todos los
+// campos, los calendarios y los selectores de personas.
+
+// Camino inverso de readForm(): la misma regla de nombres dice de dónde
+// sale cada valor ("field.body_shape" ← data.field.body_shape).
+// form.elements incluye el interruptor de publicación, que está fuera
+// del <form> pero unido con form="specimen-form".
+function fillForm(data) {
+  for (const element of form.elements) {
+    if (!element.name) continue;
+    const [group, key] = element.name.split('.');
+    const value = (key ? data[group]?.[key] : data[element.name]) ?? '';
+
+    if (element.type === 'radio' || element.type === 'checkbox') {
+      element.checked = element.value === value;
+    } else if (element._flatpickr) {
+      // Los campos con calendario se llenan por flatpickr para que
+      // también se actualice lo que ve la persona ("19 oct 2026").
+      // false: no dispara onChange (no es un cambio hecho a mano).
+      if (value) element._flatpickr.setDate(value, false);
+      else element._flatpickr.clear(false);
+    } else {
+      element.value = String(value);
+      // Un <select> sin la opción pedida (p. ej. precisión vacía porque no
+      // hay coordenadas) queda en blanco: se vuelve a su primera opción.
+      if (element.tagName === 'SELECT' && element.selectedIndex === -1) element.selectedIndex = 0;
+    }
+  }
+
+  for (const [role, picker] of Object.entries(peoplePickers)) {
+    picker.setNames(data.people[role] ?? []);
+  }
+
+  // Una fecha guardada cuenta como elegida a mano: cambiar la gira no la
+  // reemplaza por la fecha de la gira.
+  dateSetByHand = Boolean(data.collected_on);
+  showPublicationStatus();
+  checkCoordinates(); // coloca el marcador en el mapa
+}
+
+if (isEdit) {
+  // El botón queda desactivado hasta que el formulario esté lleno:
+  // guardar un formulario vacío o a medias borraría datos.
+  saveButton.disabled = true;
+
+  if (catalogsLoaded) {
+    try {
+      const specimen = await getSpecimen(code);
+      if (specimen) {
+        fillForm(specimen);
+        saveButton.disabled = false;
+      } else {
+        showMessage(message, `No se encontró la recolecta ${code}.`);
+      }
+    } catch (error) {
+      console.error(error);
+      showMessage(
+        message,
+        'No se pudo cargar la recolecta. Revise su conexión y recargue la página.'
+      );
+    }
+  }
+}
