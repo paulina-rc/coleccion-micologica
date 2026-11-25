@@ -473,6 +473,21 @@ a:hover {
   color: var(--blue);
 }
 
+/* Título de la página con un botón al lado (p. ej. "Nueva recolecta").
+   flex-wrap: en celular el botón baja debajo del título. */
+.page__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 22px;
+}
+
+.page__head .page__title {
+  margin: 0;
+}
+
 @media (max-width: 600px) {
   .page {
     padding: 24px 16px 40px;
