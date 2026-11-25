@@ -13,6 +13,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -26,11 +27,11 @@
     "qrcode": "1.5.4"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "10.0.1",
     "@vitejs/plugin-basic-ssl": "2.3.0",
-    "eslint": "^10.15.0",
-    "globals": "^17.14.0",
-    "prettier": "^3.10.1",
+    "eslint": "10.15.0",
+    "globals": "17.14.0",
+    "prettier": "3.10.1",
     "vite": "8.3.8"
   }
 }

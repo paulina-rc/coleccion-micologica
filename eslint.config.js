@@ -16,4 +16,12 @@ export default [
       'prefer-const': 'warn',
     },
   },
+  {
+    // vite.config.js corre en Node al compilar, no en el navegador:
+    // ahí sí existen process, __dirname, etc.
+    files: ['vite.config.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ];

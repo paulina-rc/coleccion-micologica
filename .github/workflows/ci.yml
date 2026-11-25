@@ -1,0 +1,41 @@
+name: CI
+
+# Revisa cada pull request antes de unirlo a main.
+# Si algo falla, el ruleset de main no deja hacer el merge,
+# así que nada roto llega a la página publicada.
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Si se suben dos commits seguidos al mismo PR, se cancela la revisión vieja.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Este nombre ("checks") es el que se elige en el ruleset como revisión obligatoria.
+  # No se llama "build" para no confundirlo con el trabajo build de deploy.yml.
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # La versión de Node sale de .nvmrc: un solo lugar para cambiarla.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Mismo orden que se corre en local: estilo, errores de código y compilación.
+      - name: Formato (Prettier)
+        run: npm run format:check
+      - name: Errores de código (ESLint)
+        run: npm run lint
+      - name: Compilación (Vite)
+        run: npm run build
