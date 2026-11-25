@@ -171,6 +171,11 @@ a:hover {
   color: var(--blue);
 }
 
+.alert--success {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
 /* ---------- 4. Pantalla de acceso (ingresar y cambiar contraseña) ---------- */
 .auth {
   min-height: 100vh;
