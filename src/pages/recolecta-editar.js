@@ -373,6 +373,10 @@ markCurrent('encabezado');
 // ---- Guardar ----
 const saveButton = document.querySelector('#save-button');
 
+// Foto del formulario tal como está guardado (ver "Aviso de cambios sin
+// guardar", al final). Se actualiza después de cada guardado.
+let savedSnapshot = null;
+
 // Campos que la base guarda como número o fecha: un texto vacío ("")
 // no se puede convertir en la base, así que se manda null.
 // Las coordenadas y la altitud pasan por las mismas funciones que las
@@ -457,6 +461,7 @@ form.addEventListener('submit', async (event) => {
     } else {
       showMessage(message, 'Cambios guardados.', 'success');
     }
+    savedSnapshot = JSON.stringify(readForm());
   } catch (error) {
     // 22023: la base rechazó un dato y su mensaje ya está en español.
     if (error.code === '22023') {
@@ -538,3 +543,22 @@ if (isEdit) {
     }
   }
 }
+
+
+// ---- Aviso de cambios sin guardar ----
+// En vez de escuchar cada campo, se compara el formulario completo con la
+// foto del último guardado. Así cuentan también los cambios que no
+// disparan eventos (tocar el mapa, el GPS, las etiquetas de personas), y
+// si alguien cambia algo y lo deja como estaba, no hay aviso.
+// Va al final: la foto se toma con el formulario ya lleno.
+savedSnapshot = JSON.stringify(readForm());
+
+// beforeunload cubre todas las salidas: Cancelar, el menú, recargar,
+// cerrar la pestaña o el botón Atrás. El navegador muestra su propio
+// mensaje; por seguridad, ningún sitio puede cambiar ese texto.
+window.addEventListener('beforeunload', (event) => {
+  if (JSON.stringify(readForm()) !== savedSnapshot) {
+    event.preventDefault();
+    event.returnValue = ''; // navegadores más viejos lo necesitan
+  }
+});
