@@ -544,7 +544,6 @@ if (isEdit) {
   }
 }
 
-
 // ---- Aviso de cambios sin guardar ----
 // En vez de escuchar cada campo, se compara el formulario completo con la
 // foto del último guardado. Así cuentan también los cambios que no

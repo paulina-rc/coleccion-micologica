@@ -8,12 +8,12 @@ import { supabase } from '../supabase.js';
 // Devuelve el código asignado. Si la base rechaza un dato, el error trae
 // code '22023' y un mensaje en español listo para mostrar.
 export async function saveSpecimen(code, data) {
-    const { data: savedCode, error } = await supabase.rpc('save_specimen', {
-        p_code: code,
-        p_data: data,
-    });
-    if (error) throw error;
-    return savedCode;
+  const { data: savedCode, error } = await supabase.rpc('save_specimen', {
+    p_code: code,
+    p_data: data,
+  });
+  if (error) throw error;
+  return savedCode;
 }
 
 // Columnas de specimens que usa el formulario. Se nombran una por una
@@ -41,40 +41,40 @@ const SELECT = `${SPECIMEN_COLUMNS},
 // el camino inverso de guardarlo, sin una lista de campos aparte.
 // Devuelve null si no existe (o si la cuenta no puede verla).
 export async function getSpecimen(code) {
-    const { data, error } = await supabase
-        .from('specimens')
-        .select(SELECT)
-        .eq('code', code)
-        .maybeSingle();
-    if (error) throw error;
-    if (!data) return null;
+  const { data, error } = await supabase
+    .from('specimens')
+    .select(SELECT)
+    .eq('code', code)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
 
-    const { taxa, field_descriptions, lab_descriptions, person_specimen, ...specimen } = data;
+  const { taxa, field_descriptions, lab_descriptions, person_specimen, ...specimen } = data;
 
-    // Créditos agrupados por rol y en su orden: { collector: ['S. Valerio', …] }
-    const people = {};
-    for (const credit of [...person_specimen].sort((a, b) => a.position - b.position)) {
-        (people[credit.role] ??= []).push(credit.people.credit_name);
-    }
+  // Créditos agrupados por rol y en su orden: { collector: ['S. Valerio', …] }
+  const people = {};
+  for (const credit of [...person_specimen].sort((a, b) => a.position - b.position)) {
+    (people[credit.role] ??= []).push(credit.people.credit_name);
+  }
 
-    return {
-        ...specimen,
-        // La base devuelve las horas como "08:30:00"; el formulario usa "08:30".
-        time_start: specimen.time_start?.slice(0, 5) ?? null,
-        time_end: specimen.time_end?.slice(0, 5) ?? null,
-        // En la base la columna es taxon_order ("order" es palabra reservada
-        // de SQL); en el formulario es taxon.order.
-        taxon: taxa
-            ? {
-                order: taxa.taxon_order,
-                family: taxa.family,
-                genus: taxa.genus,
-                species: taxa.species,
-                authority: taxa.authority,
-            }
-            : {},
-        field: field_descriptions ?? {},
-        lab: lab_descriptions ?? {},
-        people,
-    };
+  return {
+    ...specimen,
+    // La base devuelve las horas como "08:30:00"; el formulario usa "08:30".
+    time_start: specimen.time_start?.slice(0, 5) ?? null,
+    time_end: specimen.time_end?.slice(0, 5) ?? null,
+    // En la base la columna es taxon_order ("order" es palabra reservada
+    // de SQL); en el formulario es taxon.order.
+    taxon: taxa
+      ? {
+          order: taxa.taxon_order,
+          family: taxa.family,
+          genus: taxa.genus,
+          species: taxa.species,
+          authority: taxa.authority,
+        }
+      : {},
+    field: field_descriptions ?? {},
+    lab: lab_descriptions ?? {},
+    people,
+  };
 }
