@@ -205,6 +205,36 @@
 
       <section class="card" id="laboratorio" aria-labelledby="laboratorio-title">
         <h2 class="card__title" id="laboratorio-title">Observación en laboratorio</h2>
+      
+        <!-- Campos de la tabla "Observación en laboratorio" de la ficha oficial,
+                   con sus mismas aclaraciones. Prefijo "lab.": van a lab_descriptions.
+                   Quién describe se anota en Créditos (encabezado). -->
+        <div class="grid grid--2">
+          <label class="field grid__wide"><span>Píleo <span class="field__hint">(tamaño, forma, color, margen, superficie,
+                contexto)</span></span>
+            <textarea name="lab.pileus" rows="4"></textarea>
+          </label>
+          <label class="field grid__wide"><span>Himenóforo <span class="field__hint">(tipo, color, densidad, libre o adherido
+                al estípite)</span></span>
+            <textarea name="lab.hymenophore" rows="4"></textarea>
+          </label>
+          <label class="field grid__wide"><span>Estípite o pie <span class="field__hint">(forma, superficie,
+                posición)</span></span>
+            <textarea name="lab.stipe" rows="4"></textarea>
+          </label>
+          <label class="field grid__wide"><span>Estructuras asociadas <span class="field__hint">(anillo, volva, cortina,
+                escamas, coberturas gelatinosas)</span></span>
+            <textarea name="lab.associated_structures" rows="3"></textarea>
+          </label>
+      
+          <label class="field">Características organolépticas
+            <textarea name="lab.organoleptic" rows="3"></textarea>
+          </label>
+          <!-- type="text": el calendario lo dibuja src/pickers.js, igual que la fecha de colecta -->
+          <label class="field">Fecha de descripción
+            <input type="text" name="lab.described_on" id="described-on" placeholder="Elegir fecha">
+          </label>
+        </div>
       </section>
 
       <div class="card-row">

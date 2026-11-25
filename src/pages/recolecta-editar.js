@@ -250,36 +250,50 @@ gpsButton.addEventListener('click', () => {
   );
 });
 
-// ---- Índice de secciones ----
-// Marca en el índice la sección que se está viendo. IntersectionObserver
-// avisa cuando una tarjeta entra en la franja superior de la pantalla,
-// sin calcular posiciones en cada scroll.
-const links = new Map(
-  [...document.querySelectorAll('.steps__link')].map((link) => [link.hash.slice(1), link]),
-);
+  // ---- Laboratorio ----
+  // La descripción se hace días después de la gira, por eso tiene su
+  // propia fecha. Misma regla que la fecha de colecta: no puede ser futura.
+  const describedOn = document.querySelector('#described-on');
+  const describedOnPicker = datePicker(describedOn, { onChange: () => checkDescribedOn() });
 
-function markCurrent(id) {
-  for (const [sectionId, link] of links) {
-    link.classList.toggle('is-current', sectionId === id);
-    if (sectionId === id) link.setAttribute('aria-current', 'step');
-    else link.removeAttribute('aria-current');
+  // Devuelve true si no hay error (lo usará el guardado, elemento 14).
+  function checkDescribedOn() {
+    const value = describedOn.value;
+    const error = value && value > todayLocal() ? 'La fecha de descripción no puede ser posterior a hoy.' : '';
+    setFieldError(describedOnPicker.altInput, error);
+    return !error;
   }
-}
 
-const observer = new IntersectionObserver((entries) => {
-  const visible = entries.filter((entry) => entry.isIntersecting);
-  if (visible.length) markCurrent(visible[0].target.id);
-}, { rootMargin: '0px 0px -70% 0px' }); // solo cuenta el 30 % superior de la pantalla
+  // ---- Índice de secciones ----
+  // Marca en el índice la sección que se está viendo. IntersectionObserver
+  // avisa cuando una tarjeta entra en la franja superior de la pantalla,
+  // sin calcular posiciones en cada scroll.
+  const links = new Map(
+    [...document.querySelectorAll('.steps__link')].map((link) => [link.hash.slice(1), link]),
+  );
 
-for (const id of links.keys()) {
-  const section = document.getElementById(id);
-  if (section) observer.observe(section);
-}
-markCurrent('encabezado');
+  function markCurrent(id) {
+    for (const [sectionId, link] of links) {
+      link.classList.toggle('is-current', sectionId === id);
+      if (sectionId === id) link.setAttribute('aria-current', 'step');
+      else link.removeAttribute('aria-current');
+    }
+  }
 
-// ---- Guardar ----
-// Por ahora solo evita que el formulario recargue la página.
-// El guardado real con save_specimen llega en el elemento 14.
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-});
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting);
+    if (visible.length) markCurrent(visible[0].target.id);
+  }, { rootMargin: '0px 0px -70% 0px' }); // solo cuenta el 30 % superior de la pantalla
+
+  for (const id of links.keys()) {
+    const section = document.getElementById(id);
+    if (section) observer.observe(section);
+  }
+  markCurrent('encabezado');
+
+  // ---- Guardar ----
+  // Por ahora solo evita que el formulario recargue la página.
+  // El guardado real con save_specimen llega en el elemento 14.
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
