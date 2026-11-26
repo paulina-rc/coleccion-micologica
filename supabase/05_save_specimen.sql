@@ -259,8 +259,8 @@ begin
   end if;
 
   -- ---- Créditos ----
-  -- Solo se tocan los roles que manda el formulario. El fotógrafo se
-  -- maneja en el paso 5 (fotos) y no se borra al guardar este formulario.
+  -- Solo se tocan los roles que manda el formulario. Desde el paso 5
+  -- manda los cinco, incluido el de fotografía (sección "Fotografías").
   -- Un nombre nuevo se crea en people tal como se escribió ("S. Valerio").
   -- En vez de borrar todo y volver a insertar, solo se quita lo que
   -- salió de la lista: así el historial muestra solo los cambios reales.
