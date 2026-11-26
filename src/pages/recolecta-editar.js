@@ -12,6 +12,7 @@ import { parseDecimal, parseAltitude, coordinateErrors, altitudeErrors } from '.
 import { listPeople } from '../api/people.js';
 import { createPeoplePicker } from '../people-picker.js';
 import { saveSpecimen, getSpecimen } from '../api/specimens.js';
+import { createPhotoGallery } from '../photo-gallery.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -370,6 +371,10 @@ for (const id of links.keys()) {
 }
 markCurrent('encabezado');
 
+// ---- Fotografías ----
+// Se activa cuando la recolecta tiene código (ver "Guardar" y "Cargar").
+const photoGallery = createPhotoGallery(document.querySelector('#fotos'));
+
 // ---- Guardar ----
 const saveButton = document.querySelector('#save-button');
 
@@ -458,6 +463,7 @@ form.addEventListener('submit', async (event) => {
       history.replaceState(null, '', url(PAGES.specimenEdit, { c: savedCode }));
       showEditMode(savedCode);
       showMessage(message, `Recolecta guardada con el código ${savedCode}.`, 'success');
+      photoGallery.load(savedCode);
     } else {
       showMessage(message, 'Cambios guardados.', 'success');
     }
@@ -531,6 +537,7 @@ if (isEdit) {
       if (specimen) {
         fillForm(specimen);
         saveButton.disabled = false;
+        photoGallery.load(code);
       } else {
         showMessage(message, `No se encontró la recolecta ${code}.`);
       }
