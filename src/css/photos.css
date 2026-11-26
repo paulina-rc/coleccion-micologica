@@ -1,0 +1,159 @@
+/* Sección "Fotografías" del formulario (src/photo-gallery.js) */
+
+/* Antes del primer guardado la recolecta no tiene código ni carpeta */
+.photos__locked {
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.photos__locked[hidden],
+.photos[hidden] {
+  display: none;
+}
+
+/* Tipo de foto + botón para elegirlas, en una fila */
+.photos__upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.photos__upload .field {
+  flex: 0 1 220px;
+}
+
+/* El <input type="file"> va escondido dentro de la etiqueta: el botón del
+   navegador no se puede rediseñar y en cada sistema se ve distinto. */
+.photos__pick {
+  height: 48px;
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.photos__pick:hover {
+  background: var(--blue);
+}
+
+.photos__pick:has(input:focus-visible) {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.photos__pick.is-busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.photos__note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.photos__status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--blue);
+}
+
+.photos__status:empty {
+  display: none;
+}
+
+.photos .alert {
+  margin-top: 12px;
+}
+
+/* Un grupo por tipo: Campo, Laboratorio, Detalle */
+.photos__group {
+  margin-top: 18px;
+}
+
+.photos__group-title {
+  margin: 0 0 10px;
+  font: 600 15px var(--font-title);
+  color: var(--brown);
+}
+
+.photos__empty {
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.photos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.photo {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.photo__link {
+  display: block;
+}
+
+/* Cuadrada y recortada: la galería se ve ordenada aunque haya fotos
+   verticales y horizontales. La foto completa se ve al abrirla. */
+.photo__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.photo__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 4px 4px 10px;
+  background: var(--white);
+}
+
+.photo__name {
+  font: 500 12px var(--font-code);
+  color: var(--navy);
+}
+
+.photo__delete {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--pill);
+  background: none;
+  color: var(--error);
+  font: 600 12px var(--font-text);
+  cursor: pointer;
+}
+
+.photo__delete:hover {
+  background: var(--error-soft);
+}
+
+.photo__delete:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Crédito de fotografía, debajo de la galería */
+.photos__credit {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}

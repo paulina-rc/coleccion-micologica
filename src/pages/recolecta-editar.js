@@ -12,6 +12,7 @@ import { parseDecimal, parseAltitude, coordinateErrors, altitudeErrors } from '.
 import { listPeople } from '../api/people.js';
 import { createPeoplePicker } from '../people-picker.js';
 import { saveSpecimen, getSpecimen } from '../api/specimens.js';
+import { createPhotoGallery } from '../photo-gallery.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -128,7 +129,7 @@ function addOption(select, value, label) {
 const tripDates = new Map();
 
 // ---- Créditos: selector de personas por rol ----
-// Una sola lista para los cuatro selectores (ver people-picker.js).
+// Una sola lista para los cinco selectores (ver people-picker.js).
 // Los selectores se crean antes de cargar la lista: si la carga falla,
 // igual se pueden escribir nombres.
 const people = [];
@@ -139,8 +140,10 @@ for (const field of document.querySelectorAll('[data-people-role]')) {
 
 // Créditos con la forma que espera save_specimen:
 // { "collector": ["S. Valerio"], "identifier": ["M. Mata"], ... }
-// Se mandan los cuatro roles aunque estén vacíos: un rol vacío borra los
-// créditos que tenía (al editar). El fotógrafo no se manda (paso 5).
+// Se mandan todos los roles aunque estén vacíos: un rol vacío borra los
+// créditos que tenía (al editar). El de fotografía está en la sección
+// "Fotografías", pero se lee igual: el bucle de arriba toma todos los
+// [data-people-role] de la página.
 function readCredits() {
   return Object.fromEntries(
     Object.entries(peoplePickers).map(([role, picker]) => [role, picker.getNames()])
@@ -370,6 +373,10 @@ for (const id of links.keys()) {
 }
 markCurrent('encabezado');
 
+// ---- Fotografías ----
+// Se activa cuando la recolecta tiene código (ver "Guardar" y "Cargar").
+const photoGallery = createPhotoGallery(document.querySelector('#fotos'));
+
 // ---- Guardar ----
 const saveButton = document.querySelector('#save-button');
 
@@ -458,6 +465,7 @@ form.addEventListener('submit', async (event) => {
       history.replaceState(null, '', url(PAGES.specimenEdit, { c: savedCode }));
       showEditMode(savedCode);
       showMessage(message, `Recolecta guardada con el código ${savedCode}.`, 'success');
+      photoGallery.load(savedCode);
     } else {
       showMessage(message, 'Cambios guardados.', 'success');
     }
@@ -531,6 +539,7 @@ if (isEdit) {
       if (specimen) {
         fillForm(specimen);
         saveButton.disabled = false;
+        photoGallery.load(code);
       } else {
         showMessage(message, `No se encontró la recolecta ${code}.`);
       }

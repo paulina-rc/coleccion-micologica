@@ -39,6 +39,9 @@
           <li>
             <a class="steps__link" href="#coleccion"><span class="steps__num">5</span>Colección</a>
           </li>
+          <li>
+            <a class="steps__link" href="#fotos"><span class="steps__num">6</span>Fotos</a>
+          </li>
         </ol>
       </nav>
 
@@ -480,6 +483,64 @@
             </div>
           </section>
         </div>
+
+        <section class="card" id="fotos" aria-labelledby="fotos-title">
+          <h2 class="card__title" id="fotos-title">Fotografías</h2>
+
+          <!-- La carpeta de las fotos lleva el código y la clave del QR, que
+               asigna la base al guardar: antes no hay dónde subirlas. -->
+          <p class="photos__locked" data-photos-locked>
+            Guarde la recolecta para agregar fotografías.
+          </p>
+
+          <!-- Lo maneja src/photo-gallery.js. Los campos no tienen name: no
+               son parte de lo que se guarda con el botón Guardar. -->
+          <div class="photos" data-photos hidden>
+            <div class="photos__upload">
+              <label class="field"
+                >Tipo de foto
+                <select data-photo-kind>
+                  <option value="field">Campo</option>
+                  <option value="lab">Laboratorio</option>
+                  <option value="detail">Detalle</option>
+                </select>
+              </label>
+              <!-- image/*: en el celular ofrece la cámara además de la galería -->
+              <label class="btn btn--outline photos__pick"
+                >Elegir fotos
+                <input
+                  type="file"
+                  class="visually-hidden"
+                  accept="image/*"
+                  multiple
+                  data-photo-input
+                />
+              </label>
+            </div>
+            <p class="photos__note">
+              Las fotos se guardan al subirlas, sin usar el botón Guardar. Se comprimen y se les
+              quitan los datos de ubicación de la cámara.
+            </p>
+            <p class="photos__status" role="status" data-photos-status></p>
+            <p class="alert" role="alert" data-photos-message hidden></p>
+            <div data-photos-groups></div>
+          </div>
+
+          <!-- Crédito de quien tomó las fotos (rol photographer). A diferencia de
+               las fotos, se guarda con el botón Guardar, como los demás créditos;
+               por eso se puede escribir aunque la recolecta todavía sea nueva. -->
+          <div class="photos__credit">
+            <div class="field people" data-people-role="photographer">
+              <label for="people-photographer">Fotografía</label>
+              <input
+                type="text"
+                id="people-photographer"
+                maxlength="120"
+                placeholder="Escriba un nombre"
+              />
+            </div>
+          </div>
+        </section>
       </form>
     </main>
 

@@ -17,21 +17,21 @@ Un cambio que está en una rama (por ejemplo `feat/specimen-form`) solo se ve en
 
 ## Páginas
 
-| Ruta                                      | Página               | ¿Pide sesión?       | Qué hace                                                                                         | Estado               |
-| ----------------------------------------- | -------------------- | ------------------- | ------------------------------------------------------------------------------------------------ | -------------------- |
-| `/`                                       | Raíz                 | No                  | Redirige a `app/recolectas.html`. No hay página de inicio pública                                | Paso 3               |
-| `app/ingresar.html`                       | Iniciar sesión       | No                  | Correo y contraseña. Si se llegó desde otra página, vuelve a ella después de ingresar (`?next=`) | Paso 3               |
-| `app/cambiar-contrasena.html`             | Cambiar contraseña   | Sí                  | Obligatoria en el primer ingreso (contraseña temporal). También desde el menú de la cuenta       | Paso 3               |
-| `app/recolectas.html`                     | Recolectas           | Sí                  | Página de inicio después de ingresar. Por ahora solo el saludo; el listado llega en el paso 6    | Paso 6               |
-| `app/recolecta-editar.html`               | Nueva recolecta      | Sí                  | Formulario para registrar una recolecta. El código CITTED se asigna al guardar                   | Paso 4               |
-| `app/recolecta-editar.html?c=CITTED-0077` | Editar recolecta     | Sí                  | El mismo formulario con los datos de esa recolecta                                               | Paso 4 (elemento 15) |
-| `app/recolecta.html?c=CITTED-0077`        | Detalle              | Sí                  | Todos los datos de una recolecta, sus fotos y su QR                                              | Paso 6               |
-| `h/?c=CITTED-0077-k7f3q9`                 | Ficha pública del QR | No                  | Lo que se abre al escanear la etiqueta. Solo recolectas publicadas y sin datos sensibles         | Paso 7               |
-| `app/etiquetas.html`                      | Etiquetas            | Sí                  | Imprimir etiquetas con QR en lote                                                                | Paso 8               |
-| `app/importar.html`                       | Importar Excel       | Sí (administración) | Cargar recolectas desde el Excel del equipo                                                      | Paso 9               |
-| `app/notificaciones.html`                 | Notificaciones       | Sí                  | Avisos cuando otra persona modifica una recolecta propia                                         | Paso 10              |
-| `app/selecciones.html`                    | Selecciones          | Sí                  | Crear grupos de recolectas para estudiantes                                                      | Paso 10              |
-| `s/?k=xxxxxxxxxx`                         | Selección pública    | No                  | Lista de fichas que comparte un docente                                                          | Paso 10              |
+| Ruta                                      | Página               | ¿Pide sesión?       | Qué hace                                                                                         | Estado      |
+| ----------------------------------------- | -------------------- | ------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
+| `/`                                       | Raíz                 | No                  | Redirige a `app/recolectas.html`. No hay página de inicio pública                                | Paso 3      |
+| `app/ingresar.html`                       | Iniciar sesión       | No                  | Correo y contraseña. Si se llegó desde otra página, vuelve a ella después de ingresar (`?next=`) | Paso 3      |
+| `app/cambiar-contrasena.html`             | Cambiar contraseña   | Sí                  | Obligatoria en el primer ingreso (contraseña temporal). También desde el menú de la cuenta       | Paso 3      |
+| `app/recolectas.html`                     | Recolectas           | Sí                  | Página de inicio después de ingresar. Por ahora solo el saludo; el listado llega en el paso 6    | Paso 6      |
+| `app/recolecta-editar.html`               | Nueva recolecta      | Sí                  | Formulario para registrar una recolecta. El código CITTED se asigna al guardar                   | Paso 4      |
+| `app/recolecta-editar.html?c=CITTED-0077` | Editar recolecta     | Sí                  | El mismo formulario con los datos de esa recolecta. Aquí se suben y se quitan sus fotos          | Pasos 4 y 5 |
+| `app/recolecta.html?c=CITTED-0077`        | Detalle              | Sí                  | Todos los datos de una recolecta, sus fotos y su QR                                              | Paso 6      |
+| `h/?c=CITTED-0077-k7f3q9`                 | Ficha pública del QR | No                  | Lo que se abre al escanear la etiqueta. Solo recolectas publicadas y sin datos sensibles         | Paso 7      |
+| `app/etiquetas.html`                      | Etiquetas            | Sí                  | Imprimir etiquetas con QR en lote                                                                | Paso 8      |
+| `app/importar.html`                       | Importar Excel       | Sí (administración) | Cargar recolectas desde el Excel del equipo                                                      | Paso 9      |
+| `app/notificaciones.html`                 | Notificaciones       | Sí                  | Avisos cuando otra persona modifica una recolecta propia                                         | Paso 10     |
+| `app/selecciones.html`                    | Selecciones          | Sí                  | Crear grupos de recolectas para estudiantes                                                      | Paso 10     |
+| `s/?k=xxxxxxxxxx`                         | Selección pública    | No                  | Lista de fichas que comparte un docente                                                          | Paso 10     |
 
 ## Parámetros de las direcciones
 
