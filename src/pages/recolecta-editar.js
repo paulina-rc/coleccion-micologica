@@ -129,7 +129,7 @@ function addOption(select, value, label) {
 const tripDates = new Map();
 
 // ---- Créditos: selector de personas por rol ----
-// Una sola lista para los cuatro selectores (ver people-picker.js).
+// Una sola lista para los cinco selectores (ver people-picker.js).
 // Los selectores se crean antes de cargar la lista: si la carga falla,
 // igual se pueden escribir nombres.
 const people = [];
@@ -140,8 +140,10 @@ for (const field of document.querySelectorAll('[data-people-role]')) {
 
 // Créditos con la forma que espera save_specimen:
 // { "collector": ["S. Valerio"], "identifier": ["M. Mata"], ... }
-// Se mandan los cuatro roles aunque estén vacíos: un rol vacío borra los
-// créditos que tenía (al editar). El fotógrafo no se manda (paso 5).
+// Se mandan todos los roles aunque estén vacíos: un rol vacío borra los
+// créditos que tenía (al editar). El de fotografía está en la sección
+// "Fotografías", pero se lee igual: el bucle de arriba toma todos los
+// [data-people-role] de la página.
 function readCredits() {
   return Object.fromEntries(
     Object.entries(peoplePickers).map(([role, picker]) => [role, picker.getNames()])

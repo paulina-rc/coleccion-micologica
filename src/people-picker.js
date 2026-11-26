@@ -1,5 +1,5 @@
 // Selector de personas para los créditos de una recolecta.
-// Un selector por rol (colector, asistentes, identifica, describe): se
+// Un selector por rol (colector, asistentes, identifica, describe, fotografía): se
 // escribe un nombre, se elige de la lista o se agrega uno nuevo, y cada
 // nombre elegido queda como una etiqueta que se puede quitar.
 //
