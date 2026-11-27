@@ -95,17 +95,18 @@
   padding: 14px 18px 18px;
 }
 
-/* Sin taxón (texto de campo o "Sin identificar"): Open Sans normal.
-   Merriweather solo está cargada en cursiva, que es para nombres científicos. */
+/* Sin taxón (texto de campo o "Sin identificar"): Open Sans, porque no es
+   un nombre científico. */
 .specimen-card__name {
   margin: 0;
   font: 600 17px/1.25 var(--font-text);
   color: var(--green-dark);
 }
 
-/* Género y especie en cursiva, como se escriben en biología */
+/* Nombre científico en Merriweather. La cursiva la pone el <i> del género
+   y la especie; "sp." queda derecho, como se escribe en biología. */
 .specimen-card__name--scientific {
-  font: italic 400 20px/1.15 var(--font-science);
+  font: 400 20px/1.15 var(--font-science);
 }
 
 .specimen-card__meta {

@@ -2,10 +2,12 @@
    Solo el subconjunto "latin" (incluye tildes y ñ) y solo los grosores
    que usa el diseño. Para agregar uno: @import '@fontsource/<fuente>/latin-<grosor>.css';
    Jost reemplaza a Futura (oficial de la UNED, pero con licencia comercial).
-   Merriweather en cursiva: nombres científicos ("Xylaria polymorpha"). */
+    Merriweather: nombres científicos. Cursiva para género y especie
+   ("Xylaria polymorpha"); normal para lo que no va en cursiva ("Mycena sp."). */
 @import '@fontsource/jost/latin-600.css';
 @import '@fontsource/jost/latin-700.css';
 @import '@fontsource/jost/latin-700-italic.css';
+@import '@fontsource/merriweather/latin-400.css';
 @import '@fontsource/merriweather/latin-400-italic.css';
 @import '@fontsource/merriweather/latin-700-italic.css';
 @import '@fontsource/open-sans/latin-400.css';
