@@ -1,0 +1,246 @@
+/* Listado de recolectas (app/recolectas.html): tarjetas en cuadrícula,
+   como el prototipo aprobado. */
+
+/* Cantidad junto al título: "Recolectas 76" */
+.specimen-count {
+  margin-left: 10px;
+  font: 600 20px var(--font-code);
+  color: var(--brown);
+  vertical-align: super;
+}
+
+/* auto-fill: el número de columnas sale del ancho de la pantalla
+   (4 en computadora, 1 en celular) sin media queries. */
+.specimen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* La tarjeta entera es un enlace: se toca en cualquier parte. */
+.specimen-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 1px 0 #e2dcc8;
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.15s;
+}
+
+.specimen-card:hover {
+  color: inherit;
+  box-shadow:
+    0 1px 0 #e2dcc8,
+    0 6px 18px rgba(2, 17, 53, 0.1);
+}
+
+/* ---------- Foto ---------- */
+/* aspect-ratio reserva el espacio antes de que llegue la foto: la página
+   no salta mientras cargan las miniaturas (CLS, plan de mejoras 5.2). */
+.specimen-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(135deg, #d3dccb 0 2px, #e3e9dc 2px 14px);
+}
+
+.specimen-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Recolecta sin fotos: el texto queda centrado sobre las rayas */
+.specimen-card__no-photo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Código y estado de publicación encima de la foto */
+.specimen-card__code {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background: var(--yellow);
+  color: var(--navy);
+  font: 600 12px var(--font-code);
+  letter-spacing: 0.04em;
+}
+
+.specimen-card__status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* ---------- Texto ---------- */
+.specimen-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px 18px;
+}
+
+/* Sin taxón (texto de campo o "Sin identificar"): Open Sans normal.
+   Merriweather solo está cargada en cursiva, que es para nombres científicos. */
+.specimen-card__name {
+  margin: 0;
+  font: 600 17px/1.25 var(--font-text);
+  color: var(--green-dark);
+}
+
+/* Género y especie en cursiva, como se escriben en biología */
+.specimen-card__name--scientific {
+  font: italic 400 20px/1.15 var(--font-science);
+}
+
+.specimen-card__meta {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.specimen-card__ident {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ---------- Estados ---------- */
+/* Publicación: "Publicada" en verde y "En investigación" en el amarillo
+   CITTED (contexto-diseno.md, 3b). El texto amarillo no se lee sobre
+   blanco, por eso va café sobre fondo amarillo claro. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--pill);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status--published {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.status--in_research {
+  background: #fdf0d2;
+  color: var(--brown);
+}
+
+/* Identificación: solo punto de color y texto, sin fondo, para que no
+   compita con el estado de publicación. El color nunca va solo: siempre
+   lleva el texto del estado. */
+.ident {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ident::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ident--unidentified {
+  color: var(--brown);
+}
+.ident--to_verify {
+  color: var(--brown);
+}
+.ident--to_verify::before {
+  background: var(--yellow);
+}
+.ident--genus {
+  color: var(--blue);
+}
+.ident--species {
+  color: var(--green);
+}
+
+/* ---------- Cargando ---------- */
+/* Tarjetas grises mientras responde Supabase (plan de mejoras 4.2) */
+.specimen-card--skeleton .specimen-card__media {
+  background: #e7e3d8;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: #ece8de;
+}
+
+.skeleton-line--title {
+  width: 70%;
+  height: 20px;
+}
+
+.skeleton-line--short {
+  width: 45%;
+}
+
+.specimen-card--skeleton .specimen-card__media,
+.skeleton-line {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Quien pidió menos movimiento en su sistema no ve la animación */
+@media (prefers-reduced-motion: reduce) {
+  .specimen-card,
+  .specimen-card--skeleton .specimen-card__media,
+  .skeleton-line {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ---------- Sin resultados / error ---------- */
+.list-message {
+  padding: 40px 24px;
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.list-message p {
+  margin: 0 0 14px;
+}
+
+.list-message p:last-child {
+  margin-bottom: 0;
+}
