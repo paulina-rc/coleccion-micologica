@@ -20,6 +20,24 @@
         </a>
       </div>
 
+      <div class="list-toolbar">
+        <!-- role="search": los lectores de pantalla lo anuncian como buscador -->
+        <div class="field list-search" role="search">
+          <label class="visually-hidden" for="specimen-search">Buscar recolectas</label>
+          <input
+            type="search"
+            id="specimen-search"
+            placeholder="Buscar por código, nombre, gira, sitio o localidad"
+            autocomplete="off"
+            spellcheck="false"
+            disabled
+          />
+        </div>
+        <!-- "3 de 76 recolectas" mientras hay búsqueda; aria-live lo lee
+             sin mover el foco del buscador. -->
+        <p class="list-summary" id="list-summary" aria-live="polite"></p>
+      </div>
+
       <!-- Las tarjetas las crea src/specimen-card.js -->
       <ul class="specimen-grid" id="specimen-list"></ul>
 

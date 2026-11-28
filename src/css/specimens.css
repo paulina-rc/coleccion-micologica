@@ -9,6 +9,31 @@
   vertical-align: super;
 }
 
+/* ---------- Buscador ---------- */
+.list-toolbar {
+  margin-bottom: 20px;
+}
+
+.list-search {
+  max-width: 560px;
+}
+
+/* Lupa dibujada en el fondo del campo (SVG en línea: no es un archivo
+   más que descargar). El color es --text-muted. */
+.list-search input {
+  padding-left: 44px;
+  background: var(--white)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%235a6273' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='8.5' cy='8.5' r='6'/%3E%3Cpath d='m13 13 5 5'/%3E%3C/svg%3E")
+    no-repeat 14px center;
+}
+
+.list-summary {
+  min-height: 1.5em;
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 /* auto-fill: el número de columnas sale del ancho de la pantalla
    (5 en computadora). En celular la tarjeta mínima baja a 150 px para
    que quepan 2 por fila en lugar de una sola tarjeta enorme. */
