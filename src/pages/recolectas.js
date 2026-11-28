@@ -1,6 +1,9 @@
 // app/recolectas.html
 // Listado de recolectas en tarjetas, con buscador, filtros por estado y
 // filtros por orden, familia, gira y sitio. Todo se combina (Y).
+// Lo elegido queda en la dirección (?q=…&familia=…): al volver desde una
+// recolecta con "Atrás", o al compartir el enlace, el listado se abre
+// con los mismos filtros.
 import { requireSession } from '../auth-guard.js';
 import { renderHeader } from '../layout.js';
 import { PAGES, url } from '../paths.js';
@@ -34,6 +37,10 @@ const fieldGroup = document.querySelector('#field-filters');
 let status = 'all';
 // Una lista desplegable por filtro de FIELD_FILTERS: { order: <select>, ... }
 const selects = {};
+
+// Nombre de cada filtro en la dirección. En español porque la dirección
+// la ve la persona: ?familia=Mycenaceae se entiende solo.
+const URL_PARAMS = { order: 'orden', family: 'familia', trip: 'gira', site: 'sitio' };
 
 // Cada recolecta con sus datos, su tarjeta y su texto de búsqueda, calculados una
 // sola vez al cargar. Al escribir solo se decide cuáles se muestran:
@@ -122,6 +129,34 @@ function selectedFields() {
   return Object.fromEntries(Object.entries(selects).map(([key, select]) => [key, select.value]));
 }
 
+// Pone en la página los filtros que trae la dirección. Un valor que ya no
+// existe (una gira borrada, una dirección escrita a mano) se ignora.
+function readUrl() {
+  const params = new URLSearchParams(window.location.search);
+  search.value = params.get('q') ?? '';
+  const urlStatus = params.get('estado');
+  status = Object.hasOwn(STATUS_FILTERS, urlStatus) ? urlStatus : 'all';
+  for (const [key, select] of Object.entries(selects)) {
+    const value = params.get(URL_PARAMS[key]) ?? '';
+    const exists = [...select.options].some((option) => option.value === value);
+    select.value = exists ? value : '';
+  }
+}
+
+// Escribe en la dirección lo elegido, solo lo que tiene valor.
+// replaceState y no pushState: cada letra del buscador no debe crear una
+// entrada en el historial; "Atrás" sale del listado de una vez.
+function writeUrl(query, fields) {
+  const params = new URLSearchParams();
+  if (query.trim()) params.set('q', query.trim());
+  if (status !== 'all') params.set('estado', status);
+  for (const [key, value] of Object.entries(fields)) {
+    if (value) params.set(URL_PARAMS[key], value);
+  }
+  const text = params.toString();
+  window.history.replaceState(null, '', text ? `?${text}` : window.location.pathname);
+}
+
 function clearFilters() {
   search.value = '';
   status = 'all';
@@ -164,6 +199,8 @@ function render() {
     select.classList.toggle('is-set', select.value !== '');
   }
 
+  writeUrl(query, fields);
+
   const filtering = query.trim() || status !== 'all' || Object.values(fields).some(Boolean);
   summary.replaceChildren();
   if (filtering) {
@@ -203,6 +240,7 @@ async function loadList() {
     }));
     count.textContent = specimens.length;
     fillSelects();
+    readUrl();
     setControlsDisabled(false);
     render();
   } catch (error) {
