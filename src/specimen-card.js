@@ -56,6 +56,11 @@ function mediaNode(specimen, name) {
     // Solo se descargan las fotos que están cerca de la pantalla.
     img.loading = 'lazy';
     img.decoding = 'async';
+    // Si la miniatura no carga (archivo borrado, sin conexión), se ve el
+    // mismo aviso que una recolecta sin fotos y no el ícono de imagen rota.
+    img.addEventListener('error', () =>
+      img.replaceWith(el('span', 'specimen-card__no-photo', 'Foto no disponible'))
+    );
     media.append(img);
   } else {
     media.append(el('span', 'specimen-card__no-photo', 'Sin foto'));
