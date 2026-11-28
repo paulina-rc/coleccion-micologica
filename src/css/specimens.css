@@ -27,6 +27,51 @@
     no-repeat 14px center;
 }
 
+/* Filtros por estado: botones tipo pastilla. El elegido va en azul
+   relleno (mismo estilo que el menú activo del encabezado). */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  /* 40 px de alto + el espacio entre botones: área táctil cómoda */
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--pill);
+  background: var(--white);
+  color: var(--navy);
+  font: 600 14px var(--font-text);
+  cursor: pointer;
+}
+
+.chip:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.chip:hover:not(:disabled, [aria-pressed='true']) {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: var(--white);
+}
+
+.chip__count {
+  font: 600 12px var(--font-code);
+  opacity: 0.75;
+}
+
 .list-summary {
   min-height: 1.5em;
   margin: 8px 0 0;

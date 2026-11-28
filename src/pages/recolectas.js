@@ -1,12 +1,12 @@
 // app/recolectas.html
-// Listado de recolectas en tarjetas, con buscador. Los filtros llegan
-// en los elementos 7 a 9 del paso 6.
+// Listado de recolectas en tarjetas, con buscador y filtros por estado.
+// Los filtros por taxón, gira y sitio llegan en el elemento 8 del paso 6.
 import { requireSession } from '../auth-guard.js';
 import { renderHeader } from '../layout.js';
 import { PAGES, url } from '../paths.js';
 import { listSpecimens } from '../api/specimens.js';
 import { createSpecimenCard } from '../specimen-card.js';
-import { searchText, matchesSearch } from '../specimen-filters.js';
+import { searchText, matchesSearch, STATUS_FILTERS } from '../specimen-filters.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -20,8 +20,12 @@ const count = document.querySelector('#specimen-count');
 const message = document.querySelector('#list-message');
 const search = document.querySelector('#specimen-search');
 const summary = document.querySelector('#list-summary');
+const statusGroup = document.querySelector('#status-filters');
 
-// Cada recolecta con su tarjeta y su texto de búsqueda, calculados una
+// Filtro de estado elegido (una clave de STATUS_FILTERS).
+let status = 'all';
+
+// Cada recolecta con sus datos, su tarjeta y su texto de búsqueda, calculados una
 // sola vez al cargar. Al escribir solo se decide cuáles se muestran:
 // no se vuelven a crear tarjetas ni a descargar miniaturas.
 let entries = [];
@@ -60,10 +64,34 @@ function buttonRow(button) {
   return row;
 }
 
-// Muestra solo las tarjetas que coinciden con la búsqueda.
+// Un botón por filtro de estado. aria-pressed dice cuál está elegido:
+// el lector de pantalla lo anuncia como "presionado".
+const statusButtons = Object.entries(STATUS_FILTERS).map(([key, { label }]) => {
+  const button = el('button', 'chip');
+  button.type = 'button';
+  button.dataset.status = key;
+  button.append(el('span', '', label), el('span', 'chip__count'));
+  button.addEventListener('click', () => {
+    status = key;
+    render();
+  });
+  return button;
+});
+statusGroup.append(...statusButtons);
+
+// Muestra solo las tarjetas que pasan la búsqueda y el filtro de estado.
 function render() {
   const query = search.value;
-  const visible = entries.filter((entry) => matchesSearch(entry.text, query));
+  // Los contadores de los botones se cuentan sobre lo que deja la
+  // búsqueda: con "mycena" escrito, "Publicadas 2" son 2 Mycena publicadas.
+  const searched = entries.filter((entry) => matchesSearch(entry.text, query));
+  const visible = searched.filter((entry) => STATUS_FILTERS[status].test(entry.specimen));
+
+  for (const button of statusButtons) {
+    const { test } = STATUS_FILTERS[button.dataset.status];
+    button.setAttribute('aria-pressed', String(button.dataset.status === status));
+    button.lastChild.textContent = searched.filter((entry) => test(entry.specimen)).length;
+  }
 
   // replaceChildren cambia toda la lista de una vez: el navegador dibuja
   // una sola vez en lugar de una por tarjeta.
@@ -71,21 +99,23 @@ function render() {
   list.hidden = !visible.length;
   message.hidden = true;
 
-  summary.textContent = query.trim() ? `${visible.length} de ${entries.length} recolectas` : '';
+  const filtering = query.trim() || status !== 'all';
+  summary.textContent = filtering ? `${visible.length} de ${entries.length} recolectas` : '';
 
   if (!entries.length) {
     const link = el('a', 'btn btn--yellow', '+ Registrar la primera');
     link.href = url(PAGES.specimenEdit);
     showMessage(el('p', '', 'Todavía no hay recolectas registradas.'), buttonRow(link));
   } else if (!visible.length) {
-    const clear = el('button', 'btn btn--outline', 'Limpiar búsqueda');
+    const clear = el('button', 'btn btn--outline', 'Quitar búsqueda y filtros');
     clear.type = 'button';
     clear.addEventListener('click', () => {
       search.value = '';
+      status = 'all';
       render();
       search.focus();
     });
-    showMessage(el('p', '', 'Ninguna recolecta coincide con la búsqueda.'), buttonRow(clear));
+    showMessage(el('p', '', 'No hay recolectas que coincidan.'), buttonRow(clear));
   }
 }
 
@@ -93,6 +123,7 @@ async function loadList() {
   message.hidden = true;
   count.textContent = '';
   search.disabled = true;
+  statusButtons.forEach((button) => (button.disabled = true));
   list.hidden = false;
   list.replaceChildren(...Array.from({ length: 8 }, skeletonCard));
   // aria-busy: el lector de pantalla espera a que termine antes de leer la lista.
@@ -101,11 +132,13 @@ async function loadList() {
   try {
     const specimens = await listSpecimens();
     entries = specimens.map((specimen) => ({
+      specimen,
       card: createSpecimenCard(specimen),
       text: searchText(specimen),
     }));
     count.textContent = specimens.length;
     search.disabled = false;
+    statusButtons.forEach((button) => (button.disabled = false));
     render();
   } catch (error) {
     // El detalle técnico queda en la consola (F12) para revisarlo;
