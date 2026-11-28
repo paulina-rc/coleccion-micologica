@@ -43,3 +43,22 @@ export function matchesSearch(text, query) {
   const words = normalize(query).split(/\s+/).filter(Boolean);
   return words.every((word) => text.includes(word));
 }
+
+// Filtros rápidos por estado (botones arriba del listado). Cada uno
+// responde si una recolecta entra o no. Son excluyentes: se elige uno.
+// El orden de este objeto es el orden de los botones.
+export const STATUS_FILTERS = {
+  all: { label: 'Todas', test: () => true },
+  published: {
+    label: 'Publicadas',
+    test: (specimen) => specimen.publication_status === 'published',
+  },
+  in_research: {
+    label: 'En investigación',
+    test: (specimen) => specimen.publication_status === 'in_research',
+  },
+  unidentified: {
+    label: 'Sin identificar',
+    test: (specimen) => specimen.identification_status === 'unidentified',
+  },
+};
