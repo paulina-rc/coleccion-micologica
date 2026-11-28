@@ -1,4 +1,4 @@
-// Recolectas: guardar y cargar para editar.
+// Recolectas: listado, guardar y cargar para editar.
 // Igual que el resto de src/api/: las páginas no llaman a Supabase directamente.
 import { supabase } from '../supabase.js';
 
@@ -14,6 +14,60 @@ export async function saveSpecimen(code, data) {
   });
   if (error) throw error;
   return savedCode;
+}
+
+// Columnas del listado: solo lo que muestra cada tarjeta y lo que usan
+// la búsqueda y los filtros. Las descripciones largas no se traen aquí.
+const LIST_SELECT = `
+  code, collected_on, locality, identification_text,
+  identification_status, publication_status,
+  taxa ( taxon_order, family, genus, species, scientific_name ),
+  trips ( id, name, started_on ),
+  sites ( id, name ),
+  photos ( id, kind, position, storage_path )`;
+
+// Supabase devuelve como máximo 1000 filas por consulta (max-rows).
+// Se pide por páginas para que el listado no se corte en silencio
+// cuando la colección pase de 1000 recolectas.
+const PAGE_SIZE = 1000;
+
+// Orden de los tipos de foto para elegir la portada de la tarjeta:
+// la primera de campo; si no hay, la primera de laboratorio, etc.
+const COVER_ORDER = ['field', 'lab', 'detail'];
+
+function coverPhoto(photos) {
+  return (
+    [...photos].sort(
+      (a, b) => COVER_ORDER.indexOf(a.kind) - COVER_ORDER.indexOf(b.kind) || a.position - b.position
+    )[0] ?? null
+  );
+}
+
+// Todas las recolectas que la cuenta puede ver, de la más nueva a la
+// más antigua (por código). La búsqueda y los filtros se hacen en el
+// navegador sobre esta lista: con unos cientos de recolectas es más
+// rápido que preguntar a Supabase cada vez que se escribe una letra,
+// y los contadores de los filtros salen sin consultas extra.
+export async function listSpecimens() {
+  const rows = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from('specimens')
+      .select(LIST_SELECT)
+      .order('code', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    rows.push(...data);
+    if (data.length < PAGE_SIZE) break;
+  }
+
+  return rows.map(({ taxa, trips, sites, photos, ...specimen }) => ({
+    ...specimen,
+    taxon: taxa,
+    trip: trips,
+    site: sites,
+    cover: coverPhoto(photos),
+  }));
 }
 
 // Columnas de specimens que usa el formulario. Se nombran una por una

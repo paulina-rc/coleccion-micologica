@@ -13,6 +13,7 @@ import { listPeople } from '../api/people.js';
 import { createPeoplePicker } from '../people-picker.js';
 import { saveSpecimen, getSpecimen } from '../api/specimens.js';
 import { createPhotoGallery } from '../photo-gallery.js';
+import { formatDate, PUBLICATION_STATUS } from '../labels.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -102,18 +103,6 @@ function checkTimes() {
     start && end && end < start ? 'La hora de fin no puede ser anterior a la de inicio.' : '';
   setFieldError(timeEndPicker.altInput, error);
   return !error;
-}
-
-const dateFormat = new Intl.DateTimeFormat('es-CR', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-});
-
-// "2026-10-19" → "19 oct 2026". Se agrega la hora para que el navegador
-// no la lea como medianoche UTC (sería el día anterior en Costa Rica).
-function formatDate(isoDate) {
-  return dateFormat.format(new Date(`${isoDate}T12:00:00`));
 }
 
 // Las opciones se crean con textContent: un nombre escrito con "<" no
@@ -293,7 +282,8 @@ const publicationSwitch = document.querySelector('#publication-switch');
 const publicationLabel = document.querySelector('#publication-label');
 
 function showPublicationStatus() {
-  publicationLabel.textContent = publicationSwitch.checked ? 'Publicada' : 'En investigación';
+  publicationLabel.textContent =
+    PUBLICATION_STATUS[publicationSwitch.checked ? 'published' : 'in_research'];
 }
 publicationSwitch.addEventListener('change', showPublicationStatus);
 
