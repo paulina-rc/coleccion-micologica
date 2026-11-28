@@ -3,21 +3,35 @@
 
 /* Cantidad junto al título: "Recolectas 76" */
 .specimen-count {
-  margin-left: 10px;
+  margin-left: 2px;
   font: 600 20px var(--font-code);
   color: var(--brown);
   vertical-align: super;
 }
 
 /* auto-fill: el número de columnas sale del ancho de la pantalla
-   (4 en computadora, 1 en celular) sin media queries. */
+   (5 en computadora). En celular la tarjeta mínima baja a 150 px para
+   que quepan 2 por fila en lugar de una sola tarjeta enorme. */
 .specimen-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+@media (min-width: 700px) {
+  .specimen-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* display: grid le gana al atributo hidden; sin esto la lista vacía
+   seguiría ocupando espacio cuando sale un mensaje. */
+.specimen-grid[hidden] {
+  display: none;
 }
 
 /* La tarjeta entera es un enlace: se toca en cualquier parte. */
@@ -26,7 +40,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 16px;
   background: var(--white);
   box-shadow: 0 1px 0 #e2dcc8;
   color: inherit;
@@ -51,6 +65,12 @@
 }
 
 .specimen-card__img {
+  /* absolute: la foto no le da su tamaño a la caja. Sin esto, una foto
+     vertical del celular estira la caja (aspect-ratio cede ante el
+     contenido) y, como la fila de la cuadrícula toma la altura de la
+     tarjeta más alta, estira también a las vecinas. */
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -67,11 +87,12 @@
   color: var(--text-muted);
 }
 
-/* Código y estado de publicación encima de la foto */
+/* El código va encima de la foto; el estado de publicación va abajo,
+   junto al de identificación, para que no se monten en tarjetas angostas. */
 .specimen-card__code {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   padding: 4px 8px;
   border-radius: 3px;
   background: var(--yellow);
@@ -80,33 +101,27 @@
   letter-spacing: 0.04em;
 }
 
-.specimen-card__status {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-}
-
 /* ---------- Texto ---------- */
 .specimen-card__body {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 4px;
-  padding: 14px 18px 18px;
+  padding: 12px 14px 14px;
 }
 
 /* Sin taxón (texto de campo o "Sin identificar"): Open Sans, porque no es
    un nombre científico. */
 .specimen-card__name {
   margin: 0;
-  font: 600 17px/1.25 var(--font-text);
+  font: 600 15px/1.25 var(--font-text);
   color: var(--green-dark);
 }
 
 /* Nombre científico en Merriweather. La cursiva la pone el <i> del género
    y la especie; "sp." queda derecho, como se escribe en biología. */
 .specimen-card__name--scientific {
-  font: 400 20px/1.15 var(--font-science);
+  font: 400 17px/1.2 var(--font-science);
 }
 
 .specimen-card__meta {
@@ -115,7 +130,14 @@
   color: var(--text-muted);
 }
 
-.specimen-card__ident {
+/* Pie de la tarjeta: identificación y publicación. margin-top: auto lo
+   pega abajo, así los pies quedan alineados en toda la fila. */
+.specimen-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  justify-content: space-between;
   margin-top: auto;
   padding-top: 8px;
 }
@@ -127,6 +149,7 @@
 .status {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
   gap: 6px;
   padding: 4px 10px;
   border-radius: var(--pill);
@@ -158,6 +181,7 @@
 .ident {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
   gap: 6px;
   font-size: 13px;
   font-weight: 600;

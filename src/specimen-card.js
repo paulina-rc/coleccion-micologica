@@ -66,14 +66,7 @@ function mediaNode(specimen, name) {
     media.append(el('span', 'specimen-card__no-photo', 'Sin foto'));
   }
 
-  media.append(
-    el('span', 'specimen-card__code', specimen.code),
-    el(
-      'span',
-      `status status--${specimen.publication_status} specimen-card__status`,
-      PUBLICATION_STATUS[specimen.publication_status]
-    )
-  );
+  media.append(el('span', 'specimen-card__code', specimen.code));
   return media;
 }
 
@@ -85,13 +78,20 @@ export function createSpecimenCard(specimen) {
   body.append(name);
   const meta = metaText(specimen);
   if (meta) body.append(el('p', 'specimen-card__meta', meta));
-  body.append(
+  const foot = el('div', 'specimen-card__foot');
+  foot.append(
     el(
       'span',
-      `ident ident--${specimen.identification_status} specimen-card__ident`,
+      `ident ident--${specimen.identification_status}`,
       IDENTIFICATION_STATUS[specimen.identification_status]
+    ),
+    el(
+      'span',
+      `status status--${specimen.publication_status}`,
+      PUBLICATION_STATUS[specimen.publication_status]
     )
   );
+  body.append(foot);
 
   // Mientras no exista la página de detalle (elemento 12), la tarjeta
   // abre el formulario de esa recolecta.
