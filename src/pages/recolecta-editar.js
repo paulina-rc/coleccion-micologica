@@ -12,6 +12,7 @@ import { parseDecimal, parseAltitude, coordinateErrors, altitudeErrors } from '.
 import { listPeople } from '../api/people.js';
 import { createPeoplePicker } from '../people-picker.js';
 import { saveSpecimen, getSpecimen } from '../api/specimens.js';
+import { createPhotoGallery } from '../photo-gallery.js';
 import { formatDate, PUBLICATION_STATUS } from '../labels.js';
 
 const { profile } = await requireSession();
@@ -103,7 +104,6 @@ function checkTimes() {
   setFieldError(timeEndPicker.altInput, error);
   return !error;
 }
-
 
 // Las opciones se crean con textContent: un nombre escrito con "<" no
 // se interpreta como HTML.
