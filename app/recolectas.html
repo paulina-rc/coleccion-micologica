@@ -10,16 +10,22 @@
   <body class="is-loading">
     <main class="page">
       <div class="page__head">
-        <h1 class="page__title">Recolectas</h1>
+        <h1 class="page__title">
+          Recolectas <span class="specimen-count" id="specimen-count"></span>
+        </h1>
         <!-- El href relativo funciona solo (las dos páginas están en app/);
              recolectas.js lo reemplaza por la ruta completa con url(). -->
         <a class="btn btn--yellow" id="new-specimen" href="recolecta-editar.html">
           + Nueva recolecta
         </a>
       </div>
-      <!-- El listado se construye en el paso 6. Por ahora esta página
-         sirve para probar el layout base y la protección por sesión. -->
-      <p id="welcome"></p>
+
+      <!-- Las tarjetas las crea src/specimen-card.js -->
+      <ul class="specimen-grid" id="specimen-list"></ul>
+
+      <!-- Sin recolectas o error de conexión. role="status": el lector de
+           pantalla lo anuncia apenas aparece. -->
+      <div class="list-message" id="list-message" role="status" hidden></div>
     </main>
 
     <script type="module" src="/src/pages/recolectas.js"></script>
