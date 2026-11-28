@@ -72,11 +72,55 @@
   opacity: 0.75;
 }
 
+/* Listas desplegables: 4 en una fila en computadora, 2 en celular */
+.list-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin-top: 14px;
+  max-width: 900px;
+}
+
+@media (min-width: 700px) {
+  .list-filters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Más bajas que los campos del formulario (48 px): aquí son secundarias */
+.list-filters select {
+  height: 42px;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+/* Lista con un filtro puesto: borde azul, para ver de un vistazo cuáles
+   están activos. */
+.list-filters select.is-set {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+
 .list-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: center;
   min-height: 1.5em;
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   font-size: 13px;
   color: var(--text-muted);
+}
+
+/* Botón con aspecto de enlace ("Quitar filtros") */
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--blue);
+  font: 600 13px var(--font-text);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /* auto-fill: el número de columnas sale del ancho de la pantalla

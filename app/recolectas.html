@@ -27,7 +27,7 @@
           <input
             type="search"
             id="specimen-search"
-            placeholder="Buscar por código, nombre, gira, sitio o localidad"
+            placeholder="Código, nombre, gira, sitio o localidad"
             autocomplete="off"
             spellcheck="false"
             disabled
@@ -36,6 +36,9 @@
         <!-- Filtros por estado; los botones los crea recolectas.js con
              STATUS_FILTERS (src/specimen-filters.js). -->
         <div class="chips" id="status-filters" role="group" aria-label="Filtrar por estado"></div>
+        <!-- Orden, familia, gira y sitio; las listas las llena recolectas.js
+             con las opciones que existen en las recolectas. -->
+        <div class="list-filters" id="field-filters"></div>
         <!-- "3 de 76 recolectas" mientras hay búsqueda; aria-live lo lee
              sin mover el foco del buscador. -->
         <p class="list-summary" id="list-summary" aria-live="polite"></p>

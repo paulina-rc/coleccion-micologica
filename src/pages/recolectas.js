@@ -1,12 +1,19 @@
 // app/recolectas.html
-// Listado de recolectas en tarjetas, con buscador y filtros por estado.
-// Los filtros por taxón, gira y sitio llegan en el elemento 8 del paso 6.
+// Listado de recolectas en tarjetas, con buscador, filtros por estado y
+// filtros por orden, familia, gira y sitio. Todo se combina (Y).
 import { requireSession } from '../auth-guard.js';
 import { renderHeader } from '../layout.js';
 import { PAGES, url } from '../paths.js';
 import { listSpecimens } from '../api/specimens.js';
 import { createSpecimenCard } from '../specimen-card.js';
-import { searchText, matchesSearch, STATUS_FILTERS } from '../specimen-filters.js';
+import {
+  searchText,
+  matchesSearch,
+  STATUS_FILTERS,
+  FIELD_FILTERS,
+  filterOptions,
+  matchesFields,
+} from '../specimen-filters.js';
 
 const { profile } = await requireSession();
 renderHeader(profile, 'recolectas');
@@ -21,9 +28,12 @@ const message = document.querySelector('#list-message');
 const search = document.querySelector('#specimen-search');
 const summary = document.querySelector('#list-summary');
 const statusGroup = document.querySelector('#status-filters');
+const fieldGroup = document.querySelector('#field-filters');
 
 // Filtro de estado elegido (una clave de STATUS_FILTERS).
 let status = 'all';
+// Una lista desplegable por filtro de FIELD_FILTERS: { order: <select>, ... }
+const selects = {};
 
 // Cada recolecta con sus datos, su tarjeta y su texto de búsqueda, calculados una
 // sola vez al cargar. Al escribir solo se decide cuáles se muestran:
@@ -79,12 +89,63 @@ const statusButtons = Object.entries(STATUS_FILTERS).map(([key, { label }]) => {
 });
 statusGroup.append(...statusButtons);
 
-// Muestra solo las tarjetas que pasan la búsqueda y el filtro de estado.
+// Las listas se crean vacías; sus opciones salen de las recolectas
+// cargadas (fillSelects). Mismo marcado que los campos del formulario.
+for (const [key, { label }] of Object.entries(FIELD_FILTERS)) {
+  const field = el('div', 'field');
+  const fieldLabel = el('label', '', label);
+  const select = el('select');
+  select.id = `filter-${key}`;
+  fieldLabel.htmlFor = select.id;
+  select.addEventListener('change', render);
+  field.append(fieldLabel, select);
+  fieldGroup.append(field);
+  selects[key] = select;
+}
+
+function fillSelects() {
+  const specimens = entries.map((entry) => entry.specimen);
+  for (const [key, select] of Object.entries(selects)) {
+    const all = el('option', '', FIELD_FILTERS[key].all);
+    all.value = '';
+    const options = filterOptions(specimens, key).map(({ value, text }) => {
+      const option = el('option', '', text);
+      option.value = value;
+      return option;
+    });
+    select.replaceChildren(all, ...options);
+  }
+}
+
+// { order: 'Agaricales', family: '', ... } con lo elegido en cada lista
+function selectedFields() {
+  return Object.fromEntries(Object.entries(selects).map(([key, select]) => [key, select.value]));
+}
+
+function clearFilters() {
+  search.value = '';
+  status = 'all';
+  Object.values(selects).forEach((select) => (select.value = ''));
+  render();
+  search.focus();
+}
+
+function setControlsDisabled(disabled) {
+  search.disabled = disabled;
+  statusButtons.forEach((button) => (button.disabled = disabled));
+  Object.values(selects).forEach((select) => (select.disabled = disabled));
+}
+
+// Muestra solo las tarjetas que pasan la búsqueda y todos los filtros.
 function render() {
   const query = search.value;
-  // Los contadores de los botones se cuentan sobre lo que deja la
-  // búsqueda: con "mycena" escrito, "Publicadas 2" son 2 Mycena publicadas.
-  const searched = entries.filter((entry) => matchesSearch(entry.text, query));
+  const fields = selectedFields();
+  // Los contadores de los botones de estado se cuentan sobre lo que dejan
+  // la búsqueda y las listas: con "mycena" escrito, "Publicadas 2" son
+  // 2 Mycena publicadas.
+  const searched = entries.filter(
+    (entry) => matchesSearch(entry.text, query) && matchesFields(entry.specimen, fields)
+  );
   const visible = searched.filter((entry) => STATUS_FILTERS[status].test(entry.specimen));
 
   for (const button of statusButtons) {
@@ -99,8 +160,18 @@ function render() {
   list.hidden = !visible.length;
   message.hidden = true;
 
-  const filtering = query.trim() || status !== 'all';
-  summary.textContent = filtering ? `${visible.length} de ${entries.length} recolectas` : '';
+  for (const select of Object.values(selects)) {
+    select.classList.toggle('is-set', select.value !== '');
+  }
+
+  const filtering = query.trim() || status !== 'all' || Object.values(fields).some(Boolean);
+  summary.replaceChildren();
+  if (filtering) {
+    const clear = el('button', 'link-button', 'Quitar búsqueda y filtros');
+    clear.type = 'button';
+    clear.addEventListener('click', clearFilters);
+    summary.append(el('span', '', `${visible.length} de ${entries.length} recolectas`), clear);
+  }
 
   if (!entries.length) {
     const link = el('a', 'btn btn--yellow', '+ Registrar la primera');
@@ -109,12 +180,7 @@ function render() {
   } else if (!visible.length) {
     const clear = el('button', 'btn btn--outline', 'Quitar búsqueda y filtros');
     clear.type = 'button';
-    clear.addEventListener('click', () => {
-      search.value = '';
-      status = 'all';
-      render();
-      search.focus();
-    });
+    clear.addEventListener('click', clearFilters);
     showMessage(el('p', '', 'No hay recolectas que coincidan.'), buttonRow(clear));
   }
 }
@@ -122,8 +188,7 @@ function render() {
 async function loadList() {
   message.hidden = true;
   count.textContent = '';
-  search.disabled = true;
-  statusButtons.forEach((button) => (button.disabled = true));
+  setControlsDisabled(true);
   list.hidden = false;
   list.replaceChildren(...Array.from({ length: 8 }, skeletonCard));
   // aria-busy: el lector de pantalla espera a que termine antes de leer la lista.
@@ -137,8 +202,8 @@ async function loadList() {
       text: searchText(specimen),
     }));
     count.textContent = specimens.length;
-    search.disabled = false;
-    statusButtons.forEach((button) => (button.disabled = false));
+    fillSelects();
+    setControlsDisabled(false);
     render();
   } catch (error) {
     // El detalle técnico queda en la consola (F12) para revisarlo;
